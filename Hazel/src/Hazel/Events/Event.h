@@ -1,5 +1,6 @@
 #pragma once
 #include"Hazel/Core/Core.h"
+#include"Hazel/Log.h"
 #include <functional>
 namespace Hazel{
 
@@ -40,13 +41,13 @@ namespace Hazel{
 		virtual int GetCategoryFlags() const = 0;
 		//使用GetName的返回值作为默认返回值，但是在子类中，通过宏重写该函数
 		virtual std::string ToString() const { return GetName(); }
-
+		
 		inline bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & category;//位检测，是否与模板相符
 		}
-	private:
-		bool m_Handel = false;//用于标识事件是否已经被处理
+		bool Handeled = false;//用于标识事件是否已经被处理
+		
 	};
 	class HAZEL_API EventDispatcher
 	{
@@ -61,7 +62,7 @@ namespace Hazel{
 		{
 			if (m_Event.GetEventType()==T::GetStaticType())
 			{
-				m_Event.m_Handel = func(*(T*)&m_Event);
+				m_Event.Handeled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;

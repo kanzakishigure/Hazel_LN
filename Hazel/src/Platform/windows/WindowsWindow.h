@@ -1,7 +1,7 @@
 #pragma once
 #include"Hazel/Window.h"
-#include"GLFW/glfw3.h"
-#include"Hazel/Log.h"
+#include<GLFW/glfw3.h>
+
 namespace Hazel {
 	class HAZEL_API WindowsWindow : public Window
 	{
@@ -10,14 +10,14 @@ namespace Hazel {
 		WindowsWindow(const WindowProps& props);
 		virtual ~WindowsWindow();
 		void OnUpdate() override;
-		inline unsigned int GetWidth() const override  { return m_Data.Width; }
-		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		inline unsigned int GetWidth() const override		{ return m_Data.Width; }
+		inline unsigned int GetHeight() const override		{ return m_Data.Height; }
 
 		//½á¹¹
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
+		inline void SetEventCallback(const EventCallbackFn& callback) override     { m_Data.EventCallback = callback; }
 		void SeyVSync(bool enable) override;
 		bool IsVSync() const override ;
-
+		virtual inline void* GetNativeWindow() const override { return m_Window; }
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown ();

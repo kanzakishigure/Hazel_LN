@@ -14,8 +14,14 @@ int main(int argc,char** argv)
 	HZ_CORE_ERROR("HZ_CORE_ERROR");
 	HZ_ERROR("HZ_ERROR");
 	*/
+	
 	auto app = Hazel::createApplication();
+
+	//谨慎使用void*和this指针，以及认识到构造函数编写的严谨性
+	//auto x = app->getthisPoint();
+
 	app->run();
+	
 	delete app;
 }
 

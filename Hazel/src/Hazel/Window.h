@@ -20,6 +20,7 @@ namespace Hazel
 	class HAZEL_API Window
 	{
 	public:
+		//使用function容器存储void（Event&）的函数
 		using EventCallbackFn = std::function<void(Event&)>;
 		virtual ~Window() {}
 		virtual void OnUpdate() = 0;
@@ -29,6 +30,7 @@ namespace Hazel
 		virtual void SetEventCallback(const EventCallbackFn& callback)=0;
 		virtual void SeyVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
+		virtual inline void* GetNativeWindow() const = 0;
 		//这些部分需要在实际的平台上实现，这里应该将依赖隔离，只提供接口
 		static Window* Create(const WindowProps& props = WindowProps());
 		//使用结构体构造函数对结构体引用赋值
