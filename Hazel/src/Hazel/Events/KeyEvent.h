@@ -18,11 +18,11 @@ namespace Hazel {
 			:m_KeyCode(keycode){}
 		KeyCode m_KeyCode;
 	};
-	class HAZEL_API KeyPressEvent :public KeyEvent
+	class HAZEL_API KeyPressedEvent :public KeyEvent
 	{
 	public:
 		//子类通过调用父类构造函数，对从父类继承的值进行赋值
-		KeyPressEvent(const KeyCode keycode, const uint16_t repeatCount)
+		KeyPressedEvent(const KeyCode keycode, const uint16_t repeatCount)
 			: KeyEvent(keycode), m_RepeatCount(repeatCount){}
 
 		uint16_t GetRepeatCount() const { return m_RepeatCount; }

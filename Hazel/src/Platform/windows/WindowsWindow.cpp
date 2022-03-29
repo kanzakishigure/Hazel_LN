@@ -1,7 +1,8 @@
 #include"hzpch.h"
 #include"Platform/windows/WindowsWindow.h"
+#include"Platform/OpenGL/OpenGLContext.h"
 
-#include"hazel/Events/ApplicationEvent.h"
+#include"Hazel/Events/ApplicationEvent.h"
 #include"Hazel/Events/KeyEvent.h"
 #include"Hazel/Events/MouseEvent.h"
 
@@ -10,14 +11,16 @@
 namespace Hazel {
 
 	static bool s_GLiFWIntialized = false;
+	int WindowsWindow::s_GLFWWindowsCount = 0;
 
 	static void GLFWErrorCallback(int error,const char* description)
 	{
 		HZ_CORE_ERROR("GLFW Error ({0}):{1}", error, description);
 	}
-	Window* Window::Create(const WindowProps& props)
+	Scope<Window> Window::Create(const WindowProps& props)
 	{
-		return new WindowsWindow(props);
+		return CreateScope<WindowsWindow>(props);
+		
 	}
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
@@ -26,11 +29,13 @@ namespace Hazel {
 
 	WindowsWindow::~WindowsWindow()
 	{
+
 		WindowsWindow::Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		HZ_PROFILE_FUCTION();
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -39,17 +44,25 @@ namespace Hazel {
 		if (!s_GLiFWIntialized)
 		{
 			//TODO：glfwterminate on system shutdown
+			HZ_PROFILE_SCOPE("glfwInit");
+
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "无法初始化GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLiFWIntialized = true;
 		}
-		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(),NULL,NULL);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		HZ_ASSERT(status, "无法初始化Gald");
+		{
+			HZ_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
+			s_GLFWWindowsCount++;			
+
+		}
+		
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
+		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SeyVSync(true);
+		SetVSync(true);
 		//设置窗口回调函数
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window,int width,int height) 
 			{
@@ -57,7 +70,7 @@ namespace Hazel {
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				data.Height = height;
 				data.Width = width;
-
+				
 				WindowResizeEvent event(width,height);
 				data.EventCallback(event);
 				
@@ -75,14 +88,14 @@ namespace Hazel {
 					case GLFW_PRESS:
 					{
 						WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-						KeyPressEvent event(key,0);
+						KeyPressedEvent event(key,0);
 						data.EventCallback(event);
 					}
 						break;
 					case GLFW_REPEAT:
 					{
 						WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-						KeyPressEvent event(key, 1);
+						KeyPressedEvent event(key, 1);
 						data.EventCallback(event);
 					}
 						break;
@@ -137,19 +150,22 @@ namespace Hazel {
 	}
 	void WindowsWindow::Shutdown()
 	{
+		HZ_PROFILE_FUCTION();
 		//GLFWapi
 		glfwDestroyWindow(m_Window);
 		
 	}
 	void WindowsWindow::OnUpdate()
 	{
+		HZ_PROFILE_FUCTION();
 		//检测是否有事件触发，若有事件触发，更新状态，调用该事件的回调函数
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 		//(它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。
 	}
-	void WindowsWindow::SeyVSync(bool enable)
+	void WindowsWindow::SetVSync(bool enable)
 	{
+		HZ_PROFILE_FUCTION();
 		//启动异步
 		if (enable)
 			glfwSwapInterval(1);

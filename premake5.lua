@@ -14,6 +14,7 @@ IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
 IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
 IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["GLM"] = "Hazel/vendor/glm"
+IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
@@ -22,8 +23,10 @@ include "Hazel/vendor/imgui"
 project "Hazel"
     
     location"Hazel"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+    cppdialect"c++17"
+    staticruntime"on"
 
 
     targetdir ("bin/" ..outputdir.. "/%{prj.name}")
@@ -34,6 +37,8 @@ project "Hazel"
     { 
         "%{prj.name}/src/**.h", 
         "%{prj.name}/src/**.cpp" ,
+        "%{prj.name}/vendor/stb_image/**.h", 
+        "%{prj.name}/vendor/stb_image/**.cpp" ,
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -45,7 +50,8 @@ project "Hazel"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.GLM}"
+        "%{IncludeDir.GLM}",
+        "%{IncludeDir.stb_image}"
         
     }
     links
@@ -55,23 +61,15 @@ project "Hazel"
         "Glad",
         "ImGui"
     }
-    filter "system:windows"
-        cppdialect "c++17"     
-        staticruntime "Off"     
+    filter "system:windows" 
         systemversion "latest" 
 
         defines
         {
             "HZ_PLATFORM_WINDOWS",
             "HZ_BUILD_DLL",
-            "HZ_ENABLE_ASSERTS",
-            "GLFW_INCLUDE_NONE"
-        }
-
-        --编译后处理操作 
-        postbuildcommands
-        {
-            ("{copy}  %{cfg.buildtarget.relpath}  ../bin/" .. outputdir .."/Sandbox")
+            "GLFW_INCLUDE_NONE",
+            "_CRT_SECURE_NO_WARNINGS"
         }
 
 
@@ -79,23 +77,25 @@ project "Hazel"
     filter "configurations:Debug"
         defines "HZ_DEBUG" 
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         defines  "HZ_RELEASE" 
         runtime "Release"
-        optimize "On"
+        optimize "on"
     filter "configurations:Dist"
         defines  "HZ_DIST" 
         runtime "Release"
-        optimize "On"
+        optimize "on"
         
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-  
+    cppdialect "c++17"     
+    staticruntime "on"
+         
     targetdir ("bin/" ..outputdir.. "/%{prj.name}")
     objdir ("bin-int/" ..outputdir.. "/%{prj.name}")
 
@@ -108,21 +108,19 @@ project "Sandbox"
     { 
         "Hazel/vendor/spdlog/include",
         "Hazel/src",
-        "%{IncludeDir.GLM}"
+        "%{IncludeDir.GLM}",
+        "%{IncludeDir.ImGui}"
     }
     links
     {
         "Hazel"
     }
     filter "system:windows"
-        cppdialect "c++17"     
-        staticruntime "Off"     
         systemversion "latest" 
 
         defines
         {
-            "HZ_PLATFORM_WINDOWS",
-            
+            "HZ_PLATFORM_WINDOWS"      
         }
 
 
@@ -130,12 +128,12 @@ project "Sandbox"
     filter "configurations:Debug"
         defines "HZ_DEBUG" 
         runtime "Debug"
-        symbols "On"
+        symbols "on"
     filter "configurations:Release"
         defines  "HZ_RELEASE" 
         runtime "Release"
-        optimize "On"
+        optimize "on"
     filter "configurations:Dist"
         defines  "HZ_DIST" 
         runtime "Release"
-        optimize "On"
+        optimize "on"

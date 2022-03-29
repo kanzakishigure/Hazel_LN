@@ -1,5 +1,8 @@
 #pragma once
-#include"Hazel/Window.h"
+#include"Hazel/Core/Window.h"
+#include"Hazel/Renderer/GraphicContext.h"
+
+
 #include<GLFW/glfw3.h>
 
 namespace Hazel {
@@ -15,7 +18,7 @@ namespace Hazel {
 
 		//结构
 		inline void SetEventCallback(const EventCallbackFn& callback) override     { m_Data.EventCallback = callback; }
-		void SeyVSync(bool enable) override;
+		void SetVSync(bool enable) override;
 		bool IsVSync() const override ;
 		virtual inline void* GetNativeWindow() const override { return m_Window; }
 	private:
@@ -32,8 +35,11 @@ namespace Hazel {
 
 			EventCallbackFn EventCallback;
 		};
-		//通过结构体来传递全部数据
-
 		WindowData m_Data;
+		GraphicContext* m_Context;
+		//通过结构体来传递全部数据
+	private:
+		static int s_GLFWWindowsCount;
+
 	};
 }
