@@ -102,13 +102,13 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUCTION();
 
-		if (e.GetHight() == 0 || e.GetWindth() == 0)
+		if (e.GetHeight() == 0 || e.GetWidth() == 0)
 		{
 			m_Minimized = true;
 			return false;
 		}
 		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWindth(), e.GetHight());
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 		return false;
 	}
 

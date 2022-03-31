@@ -1,14 +1,15 @@
 #include"hzpch.h"
 #include"ImGuiLayer.h"
 
-#include"imgui.h"
-#include "examples/imgui_impl_opengl3.h"
-#include "examples/imgui_impl_glfw.h"
+#include <imgui.h>
+#include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
 
 #include "Hazel/Core/Application.h"
-//临时使用
+//Temp
 #include<GLFW/glfw3.h>
 #include <glad/glad.h>
+
 Hazel::ImGuiLayer::ImGuiLayer()
 	:Layer("ImGuiLayer")
 {
@@ -100,6 +101,19 @@ void Hazel::ImGuiLayer::End()
 
 void Hazel::ImGuiLayer::OnImGuiRender()
 {
-	//static bool show = true;
-	//ImGui::ShowDemoWindow(&show);
+	
+}
+
+void Hazel::ImGuiLayer::OnEvent(Event& e)
+{
+
+	ImGuiIO& io = ImGui::GetIO();
+	HZ_INFO("eventtype : {0}", e.GetName());
+	HZ_INFO("是否被订阅 : {0}", e.IsInCategory(EventCategoryMouse));
+	HZ_INFO("imgui 捕获鼠标 : {0}", io.WantCaptureMouse);
+	HZ_INFO("imgui 捕获键盘 : {0}", io.WantCaptureKeyboard);
+
+	e.Handeled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+	e.Handeled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+	HZ_INFO("事件是否被处理: {0}", e.Handeled);
 }

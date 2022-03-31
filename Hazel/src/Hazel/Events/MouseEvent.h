@@ -19,7 +19,7 @@ namespace Hazel
 			return ss.str();
 		}
 		EVENT_CLASS_TYPE(MouseMoved)
-		EVENT_CLASS_CATEGORY(EventCategoryInput| EventCategoryMouse)
+		EVENT_CLASS_CATEGORY(EventCategoryInput|EventCategoryMouse)
 	private:
 		float m_MouseX;
 		float m_MouseY;

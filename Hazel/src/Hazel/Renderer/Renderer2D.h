@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Texture.h"
+#include "SubTexture2D.h"
 
 namespace Hazel {
 
@@ -22,6 +23,9 @@ namespace Hazel {
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& tintcolor);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& Texture2D, const glm::vec4& tintcolor = glm::vec4(1.0f), float tilingFactor = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& Texture2D, const glm::vec4& tintcolor = glm::vec4(1.0f), float tilingFactor = 1.0f);
+
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture2D, const glm::vec4& tintcolor = glm::vec4(1.0f), float tilingFactor = 1.0f);
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture2D, const glm::vec4& tintcolor = glm::vec4(1.0f), float tilingFactor = 1.0f);
 
 		static void DrawRotateQuad(const glm::vec2& position, float roration, const glm::vec2& size, const glm::vec4& tintcolor);
 		static void DrawRotateQuad(const glm::vec3& position, float roration, const glm::vec2& size, const glm::vec4& tintcolor);

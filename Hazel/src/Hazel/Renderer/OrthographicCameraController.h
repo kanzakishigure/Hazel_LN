@@ -14,11 +14,12 @@ namespace Hazel {
 		void OnUpdate(TimeStep ts);
 		void OnEvent(Event& e);
 
+		void OnResize(uint32_t width, uint32_t height);
+		
 		const OrthographicCamera& GetOrthographicCamera() const  { return m_Camera; }
 		OrthographicCamera& GetOrthographicCamera() { return m_Camera; }
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 		OrthographicCameraBounds& GetBounds() { return m_Bounds; }
-
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);

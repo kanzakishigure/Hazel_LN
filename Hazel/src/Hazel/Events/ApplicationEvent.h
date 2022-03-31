@@ -19,8 +19,8 @@ namespace Hazel{
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
-		unsigned int GetWindth()const { return m_Width; }
-		unsigned int GetHight()const { return m_Hight; }
+		unsigned int GetWidth()const { return m_Width; }
+		unsigned int GetHeight()const { return m_Hight; }
 
 	private:
 		unsigned int m_Width, m_Hight;

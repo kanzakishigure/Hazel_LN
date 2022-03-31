@@ -9,17 +9,17 @@ int main(int argc,char** argv)
 {
 	Hazel::Log::Init();
 
-	HZ_PROFILE_BEGIN_SESSION("startup","startup-profile.json");
+	HZ_PROFILE_BEGIN_SESSION("startup","ProfileSpecication/startup-profile.json");
 	auto app = Hazel::createApplication();
 	HZ_PROFILE_END_SESSION();
 
 	//谨慎使用void*和this指针，以及认识到构造函数编写的严谨性
 	//auto x = app->getthisPoint();
-	HZ_PROFILE_BEGIN_SESSION("runtime", "runtime-profile.json");
+	HZ_PROFILE_BEGIN_SESSION("runtime", "ProfileSpecication/runtime-profile.json");
 	app->run();
 	HZ_PROFILE_END_SESSION();
 
-	HZ_PROFILE_BEGIN_SESSION("shutdown", "shutdown-profile.json");
+	HZ_PROFILE_BEGIN_SESSION("shutdown", "ProfileSpecication/shutdown-profile.json");
 	delete app;
 	HZ_PROFILE_END_SESSION();
 }

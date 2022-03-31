@@ -15,10 +15,10 @@ namespace Hazel
 
 
 
-	Ref<SubTexture2D> SubTexture2D::CreateFromCroods(Ref<Texture2D> texture, glm::vec2 croods, glm::vec2 sprtesize)
+	Ref<SubTexture2D> SubTexture2D::CreateFromCroods(Ref<Texture2D> texture, glm::vec2 croods, glm::vec2 cellsize, glm::vec2 sprtesize)
 	{
-		glm::vec2 min = {(croods.x)*sprtesize.x/texture->GetWidth(),(croods.y) * sprtesize.y / texture->GetHeight() };
-		glm::vec2 max = { (croods.x + 1) * sprtesize.x / texture->GetWidth(),(croods.y + 1) * sprtesize.y / texture->GetHeight() };
+		glm::vec2 min = {(croods.x)* cellsize.x/texture->GetWidth(),(croods.y) * cellsize.y / texture->GetHeight() };
+		glm::vec2 max = { (croods.x + sprtesize.x) * cellsize.x / texture->GetWidth(),(croods.y + sprtesize.y) * cellsize.y / texture->GetHeight() };
 
 		return CreateRef<SubTexture2D>(texture, min, max);
 

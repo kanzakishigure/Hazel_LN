@@ -13,12 +13,15 @@ namespace Hazel{
 	{
 		public:
 			Application();
-			virtual ~Application();//该类会在sandbox内形成子类，固作虚函数。方便在继承的子类内进行实现
+
+			//保证application在派生类调用时，能调用到派生类的虚析构函数
+			virtual ~Application();
 
 			void run();
 			void OnEvent(Event& e);
 			void PushLayer(Layer* layer);
 			void PushOverlay(Layer* overlay);
+			void Close() { m_Running = false; }
 			//返回的是application的单例，所以不应该将指针返回
 			inline static Application& Get() { return *s_Instance; }
 			inline  Window& GetWindow() { return *m_Window; }
