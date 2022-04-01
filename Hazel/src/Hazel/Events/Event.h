@@ -1,5 +1,5 @@
 #pragma once
-#include"Hazel/Core/Core.h"
+#include"Hazel/Core/Base.h"
 #include"Hazel/Core/Log.h"
 #include <functional>
 namespace Hazel{
@@ -30,7 +30,7 @@ namespace Hazel{
 //override能重写virtual权限
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
 	//事件的基类，析构函数会在后续子类中进行重构
-	class HAZEL_API Event
+	class  Event
 	{
 	public:
 		virtual ~Event() = default;
@@ -49,7 +49,7 @@ namespace Hazel{
 		bool Handeled = false;//用于标识事件是否已经被处理
 		
 	};
-	class HAZEL_API EventDispatcher
+	class  EventDispatcher
 	{
 		template<typename T>
 		using EventFn = std::function <bool(T&)>;

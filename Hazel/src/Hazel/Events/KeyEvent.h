@@ -6,7 +6,7 @@ namespace Hazel {
 
 
 	//KeyEvent的基类，用于后续KeyEvent的模板
-	class HAZEL_API KeyEvent:public Event
+	class  KeyEvent:public Event
 	{
 	public:
 		KeyCode GetKeyCode() const { return m_KeyCode; }
@@ -18,7 +18,7 @@ namespace Hazel {
 			:m_KeyCode(keycode){}
 		KeyCode m_KeyCode;
 	};
-	class HAZEL_API KeyPressedEvent :public KeyEvent
+	class  KeyPressedEvent :public KeyEvent
 	{
 	public:
 		//子类通过调用父类构造函数，对从父类继承的值进行赋值
@@ -36,7 +36,7 @@ namespace Hazel {
 	private:
 		uint16_t m_RepeatCount;
 	};
-	class HAZEL_API KeyReleasedEvent :public KeyEvent
+	class  KeyReleasedEvent :public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(KeyCode keycode )
@@ -50,7 +50,7 @@ namespace Hazel {
 		}
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
-	class HAZEL_API KeyTypedEvent:public KeyEvent
+	class  KeyTypedEvent:public KeyEvent
 	{
 	public:
 		KeyTypedEvent(KeyCode keycode)

@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Base.h"
 #include "Hazel/Events/Event.h"
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Core/LayerStack.h"
@@ -9,7 +9,7 @@
 namespace Hazel{
 
 
-	class HAZEL_API Application
+	class  Application
 	{
 		public:
 			Application();

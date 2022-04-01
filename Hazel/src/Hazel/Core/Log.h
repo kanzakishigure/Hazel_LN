@@ -1,11 +1,11 @@
 #pragma once
-#include"Hazel/Core/Core.h"
+#include"Hazel/Core/Base.h"
 //spdlogÍ·ÎÄ¼þ¿â
 #include"spdlog/spdlog.h"
 #include"spdlog/fmt/ostr.h"
 namespace Hazel {
 
-	class HAZEL_API Log
+	class  Log
 	{
 	public:
 		static void Init();

@@ -299,6 +299,7 @@ namespace Hazel
 		{
 			ImGui::Begin("ViewPort2");
 			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
+
 			if (m_ViewportSize != *(glm::vec2*) & viewportsize)
 			{
 				//HZ_INFO("ViewportSize:  {0}   {1}", viewportsize.x, viewportsize.y);

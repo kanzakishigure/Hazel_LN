@@ -1,6 +1,6 @@
 #pragma once
 #include "Shader.h"
-#include "Core/Core.h"
+#include "Core/Base.h"
 namespace Hazel
 {
 	class Material

@@ -1,6 +1,6 @@
 #pragma once
 #include "Hazel/Events/Event.h"
-#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Base.h"
 
 ///本文件是对window类的抽象描述
 ///函数均为纯虚函数，且无任何依赖
@@ -17,7 +17,7 @@ namespace Hazel
 			unsigned int height = 1080)
 			:Title(title), Width(width), Height(height){}
 	};
-	class HAZEL_API Window
+	class  Window
 	{
 	public:
 		//使用function容器存储void（Event&）的函数

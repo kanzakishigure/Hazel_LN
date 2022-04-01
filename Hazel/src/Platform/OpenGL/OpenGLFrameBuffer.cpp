@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 namespace Hazel {
 
-
+	static const uint32_t MaxFramebufferSize = 15360;
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferSpecification spec)
 		:m_Specification(spec)
@@ -103,6 +103,11 @@ namespace Hazel {
 
 	void OpenGLFrameBuffer::Resize( uint32_t width,uint32_t height)
 	{
+		if (width == 0 || height == 0||width>MaxFramebufferSize||height>MaxFramebufferSize)
+		{
+			HZ_WARN("try to resize framebuffer size To {0}x{1} is not allowed !", width, height);
+			return;
+		}
 		m_Specification.Width = width;
 		m_Specification.Height =height;
 		Invalidata();
