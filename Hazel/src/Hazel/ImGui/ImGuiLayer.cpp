@@ -107,13 +107,16 @@ void Hazel::ImGuiLayer::OnImGuiRender()
 void Hazel::ImGuiLayer::OnEvent(Event& e)
 {
 
-	ImGuiIO& io = ImGui::GetIO();
-	HZ_INFO("eventtype : {0}", e.GetName());
-	HZ_INFO("是否被订阅 : {0}", e.IsInCategory(EventCategoryMouse));
-	HZ_INFO("imgui 捕获鼠标 : {0}", io.WantCaptureMouse);
-	HZ_INFO("imgui 捕获键盘 : {0}", io.WantCaptureKeyboard);
+	if (m_BlokEvents)
+	{
 
-	e.Handeled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-	e.Handeled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-	HZ_INFO("事件是否被处理: {0}", e.Handeled);
+		ImGuiIO& io = ImGui::GetIO();
+		e.Handeled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+		e.Handeled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+
+	}
+		
 }
+	
+
+

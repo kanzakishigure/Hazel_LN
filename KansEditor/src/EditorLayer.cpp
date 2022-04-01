@@ -15,7 +15,7 @@ namespace Hazel
 
 
 	EditorLayer::EditorLayer()
-		:m_CameraController(1920.0f / 1080.0f), Layer("sandbox2D")
+		:m_CameraController(1920.0f / 1080.0f), Layer("EditorLayer")
 	{
 
 	}
@@ -62,6 +62,7 @@ namespace Hazel
 		HZ_PROFILE_FUCTION();
 		//update
 		{
+			if(!m_ViewportFocused)
 			m_CameraController.OnUpdate(ts);
 
 		}
@@ -116,7 +117,6 @@ namespace Hazel
 				}
 			}
 #endif	
-
 
 
 			//Á£×ÓÏµÍ³²âÊÔ		
@@ -252,9 +252,16 @@ namespace Hazel
 		}
 		ImGui::End();
 #endif
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		{
 			ImGui::Begin("ProjectSpecication");
+			//blockevent
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			m_viewprotHovered = ImGui::IsWindowHovered();
+			Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
+
 			ImGui::Text("Render2DStats");
 			ImGui::Text("DrawCalls: %d", Hazel::Renderer2D::GetStats().DrawCalls);
 			ImGui::Text("QuadCount: %d", Hazel::Renderer2D::GetStats().QuadCount);
@@ -272,9 +279,9 @@ namespace Hazel
 		//colorbuffer
 		{
 
-			//HZ_INFO("color ViewportSize:  {0}   {1}", m_ViewportSize.x, m_ViewportSize.y);
+			
 			ImGui::Begin("ViewPort1");
-			ImVec2 viewportsize = ImGui::GetWindowSize();
+			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
 			if (m_ViewportSize != *(glm::vec2*) & viewportsize)
 			{
 				
@@ -287,13 +294,11 @@ namespace Hazel
 
 			ImGui::End();
 		}
-		
-		//HZ_INFO("Camera_Aspectradio  {0}", m_CameraController.GetBounds().GetWidth() / m_CameraController.GetBounds().GetHeight());
+
 		//depthbuffer
-#if 1
-{
+		{
 			ImGui::Begin("ViewPort2");
-			ImVec2 viewportsize = ImGui::GetWindowSize();
+			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
 			if (m_ViewportSize != *(glm::vec2*) & viewportsize)
 			{
 				//HZ_INFO("ViewportSize:  {0}   {1}", viewportsize.x, viewportsize.y);
@@ -307,7 +312,7 @@ namespace Hazel
 
 			ImGui::End();
 		}
-#endif
+
 	ImGui::PopStyleVar();
 		
 

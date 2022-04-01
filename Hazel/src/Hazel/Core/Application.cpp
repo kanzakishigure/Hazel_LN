@@ -71,9 +71,11 @@ namespace Hazel
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
-		for (auto it = m_LayerStack.end() ;it!=m_LayerStack.begin();)
+
+		for (auto it = m_LayerStack.begin() ;it!=m_LayerStack.end(); ++it)
 		{
-			((Layer*)*(--it))->OnEvent(e);//时间的处理从最后渲染的layer向前穿透
+			
+			(*it)->OnEvent(e);//时间的处理从最后渲染的layer向前穿透
 			if (e.Handeled)
 				break;
 		}

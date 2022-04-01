@@ -37,6 +37,8 @@ namespace Hazel {
 		ParticleProps m_Particle;
 
 		Ref<FrameBuffer> m_Framebuffer;
+
+		bool m_ViewportFocused= false,m_viewprotHovered;
 	};
 
 

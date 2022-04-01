@@ -25,13 +25,14 @@ namespace Hazel{
 			//返回的是application的单例，所以不应该将指针返回
 			inline static Application& Get() { return *s_Instance; }
 			inline  Window& GetWindow() { return *m_Window; }
-			
-			ImGuiLayer* m_ImGuiLayer;
+	public:
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
 		Scope<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running =true;
 		bool m_Minimized = false;
 
