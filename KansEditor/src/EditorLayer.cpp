@@ -27,10 +27,10 @@ namespace Hazel
 		
 		//FrameBuffer init
 		{
-			Hazel::FrameBufferSpecification spec;
-			spec.Width = Hazel::Application::Get().GetWindow().GetWidth();
-			spec.Height = Hazel::Application::Get().GetWindow().GetHeight();
-			m_Framebuffer = Hazel::FrameBuffer::Create(spec);
+			FrameBufferSpecification spec;
+			spec.Width = Application::Get().GetWindow().GetWidth();
+			spec.Height = Application::Get().GetWindow().GetHeight();
+			m_Framebuffer = FrameBuffer::Create(spec);
 
 		}
 	
@@ -39,6 +39,14 @@ namespace Hazel
 			m_ActiveScene = CreateRef<Scene>();
 			squalEntity = m_ActiveScene->CreateEntity("SqualEntitu");
 			squalEntity.AddComponent<SpriteRendererComponent>(FlatColor);
+
+			m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
+			m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+
+			m_SecondCameraEntity = m_ActiveScene->CreateEntity("SecondCamera");
+			m_SecondCameraEntity.AddComponent<CameraComponent>(glm::ortho(-10.0f, 10.0f, -5.0f, 5.0f, -1.0f, 1.0f));
+			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = false;
+
 		}
 
 		
@@ -48,11 +56,11 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUCTION();
 		HZ_CORE_INFO("call detach");
-		Hazel::Renderer2D::Shutdown();
+		Renderer2D::Shutdown();
 
 	}
 
-	void EditorLayer::OnUpdate(Hazel::TimeStep ts)
+	void EditorLayer::OnUpdate(TimeStep ts)
 	{
 		HZ_PROFILE_FUCTION();
 		//update
@@ -61,42 +69,25 @@ namespace Hazel
 			m_CameraController.OnUpdate(ts);
 
 		}
-		Hazel::Renderer2D::ResetStats();
+		//renderer
+		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
-		//rendererprep
-		{
-			//HazelTools::InstrumentationTimer timer();
-			Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-			Hazel::RenderCommand::Clear();
-
-
-		}
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::Clear();
 		
 		//rendering
 		{
-			static float stride = 0;
-			stride += ts;
-			HZ_PROFILE_SCOPE("rendering");
-			Hazel::Renderer2D::BeginScene(m_CameraController.GetOrthographicCamera());
+			HZ_PROFILE_SCOPE("rendering")
 
-		//updateScene
-		{
-			auto group = m_ActiveScene->Reg().group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
-			{
-				auto& [transform, SpriteRenderer] = group.get(entity);
-				Renderer2D::DrawQuad(transform, SpriteRenderer.Color);
-			}
+			//updateScene
+			m_ActiveScene->OnUpdate(ts);
 
-		}
-
-			Hazel::Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
 
 		}
 	}
 
-	void EditorLayer::OnEvent(Hazel::Event& e)
+	void EditorLayer::OnEvent(Event& e)
 	{
 		HZ_PROFILE_FUCTION();
 		m_CameraController.OnEvent(e);
@@ -180,7 +171,7 @@ namespace Hazel
 				if (ImGui::MenuItem("Close", NULL, false, &p_open != NULL))
 				{
 					p_open = false;
-					Hazel::Application::Get().Close();
+					Application::Get().Close();
 				}
 				ImGui::EndMenu();
 			}
@@ -203,9 +194,9 @@ namespace Hazel
 
 
 			ImGui::Text("Render2DStats");
-			ImGui::Text("DrawCalls: %d", Hazel::Renderer2D::GetStats().DrawCalls);
-			ImGui::Text("QuadCount: %d", Hazel::Renderer2D::GetStats().QuadCount);
-			ImGui::Text("TotalVertexCount: %d", Hazel::Renderer2D::GetStats().GetTotalVertexCount());
+			ImGui::Text("DrawCalls: %d", Renderer2D::GetStats().DrawCalls);
+			ImGui::Text("QuadCount: %d", Renderer2D::GetStats().QuadCount);
+			ImGui::Text("TotalVertexCount: %d", Renderer2D::GetStats().GetTotalVertexCount());
 			ImGui::Separator();
 
 			if (squalEntity)
@@ -216,7 +207,13 @@ namespace Hazel
 				squalEntity.GetComponent<SpriteRendererComponent>().Color = FlatColor;
 				ImGui::Separator();
 			}
+
+			ImGui::Separator();
 			
+			ImGui::Checkbox("switch camera", &Switchcamera);
+			ImGui::Separator();
+			m_CameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
+			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
 			ImGui::End();
 
 		}

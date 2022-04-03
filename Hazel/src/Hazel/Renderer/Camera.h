@@ -7,10 +7,11 @@ namespace Hazel
 	class Camera
 	{
 	public:
+		//只提供projectmatrix,view matrix从transformmatrix得到
 		Camera() = default;
 		Camera(const glm::mat4& ProjectionMatrix);
 		virtual ~Camera() = default;
-		
+
 		const glm::mat4& GetProjectMatrix() const { return m_ProjectionMatrix; }
 		void SetProjectMatirx(const glm::mat4& ProjectionMatrix) { m_ProjectionMatrix = ProjectionMatrix; }
 

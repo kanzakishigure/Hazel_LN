@@ -1,6 +1,7 @@
 #pragma once
 #include <string.h>
 #include <glm/glm.hpp>
+#include "Hazel/Renderer/Camera.h"
 namespace Hazel
 {
 	struct  TagComponent
@@ -26,6 +27,16 @@ namespace Hazel
 		operator const glm::mat4& () const { return Transform; }
 
 	};
+	struct CameraComponent
+	{
+		Hazel::Camera Camera;
+		bool Primary = true;
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(Hazel::Camera camera)
+			:Camera(camera)
+		{}
+	};
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color = { 1.0f ,1.0f ,1.0f ,1.0f };
@@ -34,9 +45,7 @@ namespace Hazel
 		SpriteRendererComponent(const SpriteRendererComponent& ) = default;
 		SpriteRendererComponent(glm::vec4 color)
 			:Color(color)
-		{
-
-		}
+		{}
 	};
 	struct MeshComponent
 	{

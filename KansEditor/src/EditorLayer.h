@@ -22,10 +22,13 @@ namespace Hazel {
 		Ref<FrameBuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = glm::vec2(0.0f,0.0f);
 
-		bool m_ViewportFocused= false,m_viewprotHovered;
-		
+		bool m_ViewportFocused= false,m_viewprotHovered = false;
+		bool Switchcamera = false;
 		Ref<Scene> m_ActiveScene;
 		Entity squalEntity;
+		Entity m_CameraEntity;
+		Entity m_SecondCameraEntity;
+
 		glm::vec4 FlatColor = { 1.0,1.0,1.0,1.0 };
 	};
 
