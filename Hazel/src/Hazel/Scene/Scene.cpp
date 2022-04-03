@@ -32,7 +32,7 @@ namespace Hazel
 				auto& [transformCMP, cameraCMP] = group.get(entity);
 				if (cameraCMP.Primary)
 				{
-					maincamera = &cameraCMP.Camera;
+					maincamera = &cameraCMP.SceneCamera;
 					transform = &transformCMP.Transform;
 				}
 				
@@ -58,7 +58,21 @@ namespace Hazel
 
 	
 
-	Entity Scene::CreateEntity(const std::string name )
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		auto view = m_Rehistry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraCMP = view.get<CameraComponent>(entity);
+			if (!cameraCMP.FixedAspectRatio)
+			{
+				cameraCMP.SceneCamera.SetViewportSize(width, height);
+			}
+			
+		}
+	}
+
+	Entity Scene::CreateEntity(const std::string name)
 	{
 		Entity e = { m_Rehistry.create(),this };
 		e.AddComponent<TransformComponent>(glm::mat4(1.0f));

@@ -15,7 +15,7 @@ namespace Hazel
 		m_PerspectiveFOV = PerspectiveFOV;
 	}
 
-	void SceneCamera::SetOrthographi(float Size, float Near, float Far)
+	void SceneCamera::SetOrthographic(float Size, float Near, float Far)
 	{
 		m_ProjectionType = ProjectionType::Orthographic;
 		m_OrthographicSize = Size;

@@ -41,11 +41,14 @@ namespace Hazel
 			squalEntity.AddComponent<SpriteRendererComponent>(FlatColor);
 
 			m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
-			m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+			auto& cmp =  m_CameraEntity.AddComponent<CameraComponent>();
+			cmp.SceneCamera.SetViewportSize(1920, 1080);
 
 			m_SecondCameraEntity = m_ActiveScene->CreateEntity("SecondCamera");
-			m_SecondCameraEntity.AddComponent<CameraComponent>(glm::ortho(-10.0f, 10.0f, -5.0f, 5.0f, -1.0f, 1.0f));
+			m_SecondCameraEntity.AddComponent<CameraComponent>();
 			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = false;
+
+
 
 		}
 
@@ -63,6 +66,19 @@ namespace Hazel
 	void EditorLayer::OnUpdate(TimeStep ts)
 	{
 		HZ_PROFILE_FUCTION();
+
+		//resize
+		{
+			if (FrameBufferSpecification spec = m_Framebuffer->GetSpecification();
+				m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+				(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+			{
+				m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+				m_CameraController.OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+				m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			}
+		}
+		
 		//update
 		{
 			if(!m_ViewportFocused)
@@ -227,8 +243,8 @@ namespace Hazel
 			{
 				
 				m_ViewportSize = { viewportsize.x,viewportsize.y };
-				m_Framebuffer->Resize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
-				m_CameraController.OnResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
+				//m_Framebuffer->Resize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
+				//m_CameraController.OnResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 			}
 			uint32_t colorframebufferID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)colorframebufferID, viewportsize, ImVec2(0, 1), ImVec2(1, 0));
@@ -245,7 +261,7 @@ namespace Hazel
 			{
 				//HZ_INFO("ViewportSize:  {0}   {1}", viewportsize.x, viewportsize.y);
 				m_ViewportSize = { viewportsize.x,viewportsize.y };
-				m_Framebuffer->Resize(viewportsize.x, viewportsize.y);
+				//m_Framebuffer->Resize(viewportsize.x, viewportsize.y);
 			}
 
 

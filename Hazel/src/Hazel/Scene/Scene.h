@@ -20,6 +20,7 @@ namespace  Hazel
 		entt::registry& Reg() { return m_Rehistry; }
 
 		void OnUpdate(TimeStep ts);
+		void OnViewportResize(uint32_t width, uint32_t height);
 		Entity CreateEntity(const std::string name = std::string());
 
 	private:

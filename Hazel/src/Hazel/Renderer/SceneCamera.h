@@ -11,7 +11,7 @@ namespace Hazel {
 	public:
 		//设置相机属性
 		void SetPerspectve(float PerspectiveFOV, float Near, float Far);
-		void SetOrthographi(float Size, float Near, float Far);
+		void SetOrthographic(float Size, float Near, float Far);
 		void SetViewportSize(uint32_t width, uint32_t height);
 		//设置透视摄像机参数
 		void SetPerspectiveVerticalFOV(float VerticalFOV) { m_PerspectiveFOV = glm::radians(VerticalFOV); }
@@ -32,7 +32,8 @@ namespace Hazel {
 		ProjectionType GetProjectionType() { return m_ProjectionType; }
 
 	private:
-		ProjectionType m_ProjectionType = ProjectionType::Perspective;
+		//now did't support persipective
+		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
 		
 		float m_PerspectiveFOV = glm::radians(45.0f);;
 		float m_PerspectiveFar=1000.0f; float m_PerspectiveNear=0.1f;
