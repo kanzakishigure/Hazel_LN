@@ -11,6 +11,10 @@
 
 #include "Hazel/Core/Layer.h"
 
+#include "Hazel/Scene/Scene.h"
+#include "Hazel/Scene/Entity.h"
+#include "Hazel/Scene/Components.h"
+//------renderer---------------
 #include "Hazel/Renderer/Renderer.h"
 #include "Hazel/Renderer/Renderer2D.h"
 #include "Hazel/Renderer/RenderCommand.h "
@@ -21,7 +25,7 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/FrameBuffer.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
-
+//------渲染效果---------------
 #include "Hazel/Renderer/ParticleSystem.h"
 //------辅助工具---------------
 #include "Hazel/Debug/Instrumentor.h"

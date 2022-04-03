@@ -174,26 +174,29 @@ namespace Hazel {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& tintcolor)
 	{
+		
+			glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+			DrawQuad(transform, tintcolor);
+
+		
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& tintcolor)
+	{
 		HZ_PROFILE_FUCTION();
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
 		{
 			FlushAndReset();
 		}
-		
+
 		//bind whitetexture
 		constexpr int quadsvertexcount = 4;
 		constexpr float TilingFactor = 1.0f;
 		constexpr float textureindex = 0.0f;
-		constexpr glm::vec2 texturecroods[] = { { 0.0f,0.0f }, { 1.0f,0.0f } ,{ 1.0f,1.0f },{ 0.0f,1.0f } };
-
-
-
-		
-
-		glm::mat4 transform =
-		glm::translate(glm::mat4(1.0f), position) *
-		glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		constexpr glm::vec2 texturecroods[] = { { 0.0f,0.0f }, { 1.0f,0.0f } ,{ 1.0f,1.0f },{ 0.0f,1.0f } };		
 		size_t i = 0;
 		for (; i < quadsvertexcount; i++)
 		{
@@ -208,10 +211,8 @@ namespace Hazel {
 
 		s_Data.QuadIndexCount += 6;
 		s_Data.Stats.QuadCount++;
-		
-
-		
 	}
+
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>&Texture2D, const glm::vec4& tintcolor /*= glm::vec4(1.0f)*/, float tilingFactor )
 	{
@@ -220,10 +221,22 @@ namespace Hazel {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size,  const Ref<Texture2D>&Texture2D, const glm::vec4& tintcolor /*= glm::vec4(1.0f)*/, float tilingFactor)
 	{
+		
+	
+			glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+
+			DrawQuad(transform, Texture2D, tintcolor, tilingFactor);
+
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& Texture2D, const glm::vec4& tintcolor /*= glm::vec4(1.0f)*/, float tilingFactor /*= 1.0f*/)
+	{
 		HZ_PROFILE_FUCTION();
 		constexpr int quadsvertexcount = 4;
 		constexpr glm::vec2 croodsindex[4] = { { 0.0f,0.0f }, { 1.0f,0.0f } ,{ 1.0f,1.0f },{ 0.0f,1.0f } };
-		float textureindex  = 0.0f;
+		float textureindex = 0.0f;
 
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
@@ -232,7 +245,7 @@ namespace Hazel {
 		}
 
 		//为了保证相同的texture不会重复占用贴图slot，进行查询优化
-		for (uint32_t i =1;i<s_Data.TextureSlotIndex;i++)
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
 			if (*s_Data.TextureSlots[i].get() == *(Texture2D.get()))
 			{
@@ -240,16 +253,14 @@ namespace Hazel {
 				break;
 			}
 		}
-		if (textureindex==0.0f)
+		if (textureindex == 0.0f)
 		{
-			textureindex =(float)s_Data.TextureSlotIndex;
+			textureindex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = Texture2D;
 			s_Data.TextureSlotIndex++;
 		}
 
-		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), position) *
-			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		
 		//默认情况下使用TexIndex的索引为1指向WhiteTexture
 
 		for (size_t i = 0; i < quadsvertexcount; i++)
@@ -266,9 +277,6 @@ namespace Hazel {
 		s_Data.QuadIndexCount += 6;
 		s_Data.Stats.QuadCount++;
 
-	
-		
-
 	}
 
 
@@ -279,12 +287,22 @@ namespace Hazel {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture2D, const glm::vec4& tintcolor /*= glm::vec4(1.0f)*/, float tilingFactor /*= 1.0f*/)
 	{
+
+			glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+			DrawQuad(transform, subtexture2D, tintcolor,tilingFactor);
+		
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture2D, const glm::vec4& tintcolor /*= glm::vec4(1.0f)*/, float tilingFactor /*= 1.0f*/)
+	{
+
+
 		HZ_PROFILE_FUCTION();
 		constexpr int quadsvertexcount = 4;
 		const glm::vec2* texturecroods = subtexture2D->GetCroods();
 		float textureindex = 0.0f;
-
-
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
 		{
 			FlushAndReset();
@@ -306,9 +324,7 @@ namespace Hazel {
 			s_Data.TextureSlotIndex++;
 		}
 
-		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), position) *
-			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		
 		//默认情况下使用TexIndex的索引为1指向WhiteTexture
 
 		for (size_t i = 0; i < quadsvertexcount; i++)
@@ -325,6 +341,7 @@ namespace Hazel {
 		s_Data.QuadIndexCount += 6;
 		s_Data.Stats.QuadCount++;
 	}
+
 
 	void Renderer2D::DrawRotateQuad(const glm::vec2& position, float roration, const glm::vec2& size, const glm::vec4& tintcolor)
 	{

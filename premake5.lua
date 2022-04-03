@@ -15,6 +15,8 @@ IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
 IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["GLM"] = "Hazel/vendor/glm"
 IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
+IncludeDir["entt"] = "Hazel/vendor/entt/include"
+
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
@@ -51,7 +53,8 @@ project "Hazel"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.GLM}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.entt}"
         
     }
     links
@@ -109,7 +112,8 @@ project "Sandbox"
         "Hazel/vendor/spdlog/include",
         "Hazel/src",
         "%{IncludeDir.GLM}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.entt}"
     }
     links
     {
@@ -159,7 +163,8 @@ project "KansEditor"
             "Hazel/vendor/spdlog/include",
             "Hazel/src",
             "%{IncludeDir.GLM}",
-            "%{IncludeDir.ImGui}"
+            "%{IncludeDir.ImGui}",
+            "%{IncludeDir.entt}"
         }
         links
         {
