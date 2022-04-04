@@ -1,5 +1,5 @@
 #pragma once
-//此头文件只向外开放(应用程序)，Hazel引擎本身不应该包含本头文件
+//------core-----------------
 #include "Hazel/Core/Application.h"
 #include "Hazel/Core/KeyCodes.h"
 #include "Hazel/Core/MouseCodes.h"
@@ -10,7 +10,7 @@
 #include "Hazel/Renderer/OrthographicCameraController.h"
 
 #include "Hazel/Core/Layer.h"
-
+//------Entity---------------
 #include "Hazel/Scene/Scene.h"
 #include "Hazel/Scene/Entity.h"
 #include "Hazel/Scene/Components.h"
@@ -25,6 +25,9 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/FrameBuffer.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
+//-----script---------------
+#include "Hazel/Scene/ScriptableEntity.h"
+
 //------渲染效果---------------
 #include "Hazel/Renderer/ParticleSystem.h"
 //------辅助工具---------------

@@ -2,8 +2,10 @@
 #include <string.h>
 #include <glm/glm.hpp>
 #include "Hazel/Renderer/SceneCamera.h"
-namespace Hazel
+#include "Hazel/Scene/ScriptableEntity.h"
+namespace Hazel 
 {
+
 	struct  TagComponent
 	{
 		std::string Tag;
@@ -49,5 +51,27 @@ namespace Hazel
 	struct MeshComponent
 	{
 		glm::vec3* vertex;
+	};
+
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+		std::function<void()> InstantiateFunction;
+		std::function<void()> DestoryInstanceFunction;
+		
+		std::function<void(ScriptableEntity*)> OnCreateFunction;
+		std::function<void(ScriptableEntity*, TimeStep)> OnUpdateFunction;
+		std::function<void(ScriptableEntity*)> OnDestoryFunction;
+		template<typename T>
+		void Bind()
+		{
+			InstantiateFunction = [&]() {Instance = new T(); };
+			DestoryInstanceFunction = [&]() {delete (T*)Instance; Instance = nullptr; };
+
+			OnCreateFunction = [](ScriptableEntity* Instance) {((T*)Instance)->OnCreate(); };
+			OnUpdateFunction = [](ScriptableEntity* Instance, TimeStep ts) {((T*)Instance)->OnUpdate(ts); };
+			OnDestoryFunction = [](ScriptableEntity* Instance) {((T*)Instance)->OnDestory(); };
+
+		}
 	};
 }

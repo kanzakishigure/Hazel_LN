@@ -2,8 +2,6 @@
 #include <entt.hpp>
 
 #include "Hazel/Core/TimeStep.h"
-#include "Hazel/Scene/Components.h"
-
 namespace  Hazel
 {
 

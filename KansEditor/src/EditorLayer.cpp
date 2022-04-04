@@ -54,8 +54,46 @@ namespace Hazel
 				cmp.Primary = false;
 			}
 			
+			class CameracontorlScript: public ScriptableEntity
+			{
+			public:
+				void OnCreate()
+				{
+					HZ_INFO("On create!");
+				}
 
+				void OnUpdate(TimeStep ts)
+				{
+					HZ_INFO("On Update!");
 
+					auto& transformCMP =  GetComponent<TransformComponent>();
+					if (Input::IsKeyPressed(Key::W))
+					{
+						transformCMP.Transform[3][1] += ts * 5.0f;
+					}
+					if (Input::IsKeyPressed(Key::S))
+					{
+						transformCMP.Transform[3][1] -= ts * 5.0f;
+					}
+					if (Input::IsKeyPressed(Key::A))
+					{
+						transformCMP.Transform[3][0] += ts * 5.0f;
+					}
+					if (Input::IsKeyPressed(Key::D))
+					{
+						transformCMP.Transform[3][0] -= ts * 5.0f;
+					}
+					
+				}
+
+				void OnDestory()
+				{
+					HZ_INFO("On destory!");
+				}
+			};
+
+			
+			m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameracontorlScript>();
 
 
 		}
@@ -86,7 +124,7 @@ namespace Hazel
 				m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			}
 		}
-		
+	
 		//update
 		{
 			if(!m_ViewportFocused)
