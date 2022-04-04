@@ -40,13 +40,21 @@ namespace Hazel
 			squalEntity = m_ActiveScene->CreateEntity("SqualEntitu");
 			squalEntity.AddComponent<SpriteRendererComponent>(FlatColor);
 
-			m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
-			auto& cmp =  m_CameraEntity.AddComponent<CameraComponent>();
-			cmp.SceneCamera.SetViewportSize(1920, 1080);
+			{
+				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
+				auto& cmp = m_CameraEntity.AddComponent<CameraComponent>();
+				cmp.SceneCamera.SetViewportSize(1920, 1080);
+			}
+			
+			{
+				m_SecondCameraEntity = m_ActiveScene->CreateEntity("SecondCamera");
+				auto& cmp = m_SecondCameraEntity.AddComponent<CameraComponent>();		
+				cmp.SceneCamera.SetViewportSize(1000, 1080);
+				cmp.FixedAspectRatio = true;
+				cmp.Primary = false;
+			}
+			
 
-			m_SecondCameraEntity = m_ActiveScene->CreateEntity("SecondCamera");
-			m_SecondCameraEntity.AddComponent<CameraComponent>();
-			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = false;
 
 
 
@@ -202,13 +210,13 @@ namespace Hazel
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		{
 			ImGui::Begin("ProjectSpecication");
-			ImGui::Separator();
+			
 			//blockevent
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_viewprotHovered = ImGui::IsWindowHovered();
 			Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
 
-
+			ImGui::Separator();
 			ImGui::Text("Render2DStats");
 			ImGui::Text("DrawCalls: %d", Renderer2D::GetStats().DrawCalls);
 			ImGui::Text("QuadCount: %d", Renderer2D::GetStats().QuadCount);
@@ -223,13 +231,32 @@ namespace Hazel
 				squalEntity.GetComponent<SpriteRendererComponent>().Color = FlatColor;
 				ImGui::Separator();
 			}
-
+\
 			ImGui::Separator();
-			
 			ImGui::Checkbox("switch camera", &Switchcamera);
+			m_CameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
+			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
 			ImGui::Separator();
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
-			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
+
+			
+			auto group	= m_ActiveScene->Reg().group(entt::get<TagComponent, CameraComponent>);
+			for (auto entity :group )
+			{
+				ImGui::Separator();
+				auto& [tagCMP, cameraCMP] = group.get(entity);
+				float size = cameraCMP.SceneCamera.GetOrthographicSize();
+				if (ImGui::DragFloat("Camera Size", &size))
+				{
+					cameraCMP.SceneCamera.SetOrthographicSize(size);
+					
+					
+				}
+				ImGui::Text("Entity Tag: %s", tagCMP.Tag.c_str());
+				ImGui::Text("Camera is fiexed Aspect: %s",  cameraCMP.FixedAspectRatio ? "TRUE":"FALSE");
+				ImGui::Text("Camera is Primary: %s", cameraCMP.Primary ? "TRUE":"FALSE");
+			}
+
+			
 			ImGui::End();
 
 		}
