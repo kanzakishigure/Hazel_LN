@@ -32,7 +32,7 @@
 #include "Hazel/Renderer/ParticleSystem.h"
 //------辅助工具---------------
 #include "Hazel/Debug/Instrumentor.h"
-#include "Hazel/Math/Math.h";
+#include "Hazel/Math/Math.h"
 //------程序入口点--------------
 
 //#include"Hazel/Core/EntryPoint.h"

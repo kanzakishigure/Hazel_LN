@@ -11,6 +11,10 @@ namespace Hazel
 		{
 			return m_Entity.GetComponent<T>();
 		}
+	protected:
+		virtual void OnUpdate(TimeStep ts){}
+		virtual void OnCreate(){}
+		virtual void OnDestory(){}
 	private:
 		Entity m_Entity;
 		friend class Scene;

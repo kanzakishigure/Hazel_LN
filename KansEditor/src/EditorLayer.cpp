@@ -57,12 +57,12 @@ namespace Hazel
 			class CameracontorlScript: public ScriptableEntity
 			{
 			public:
-				void OnCreate()
+				void OnCreate() override
 				{
 					HZ_INFO("On create!");
 				}
 
-				void OnUpdate(TimeStep ts)
+				void OnUpdate(TimeStep ts)override
 				{
 					HZ_INFO("On Update!");
 
@@ -86,7 +86,7 @@ namespace Hazel
 					
 				}
 
-				void OnDestory()
+				void OnDestory() override
 				{
 					HZ_INFO("On destory!");
 				}

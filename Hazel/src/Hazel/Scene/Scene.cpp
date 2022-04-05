@@ -29,19 +29,14 @@ namespace Hazel
 				
 				if (!nsc.Instance)
 				{
-					nsc.InstantiateFunction();
+					nsc.Instance =  nsc.InstantiateFunction();
 					nsc.Instance->m_Entity = Entity{ entity,this };
-					nsc.OnCreateFunction(nsc.Instance);
+					nsc.Instance->OnCreate();
 				}
-
 				
-				nsc.OnUpdateFunction(nsc.Instance, ts);
-
-				nsc.OnDestoryFunction(nsc.Instance);
-				nsc.DestoryInstanceFunction();
-				
-				
-				
+				nsc.Instance->OnUpdate(ts);
+				nsc.Instance->OnDestory();
+				nsc.DestoryInstanceFunction(&nsc);
 				});
 		
 		}
@@ -54,7 +49,7 @@ namespace Hazel
 			auto group = m_Rehistry.group<>(entt::get<TransformComponent,CameraComponent>);
 			for (auto entity : group)
 			{
-				auto& [transformCMP, cameraCMP] = group.get(entity);
+				auto [transformCMP, cameraCMP] = group.get(entity);
 				if (cameraCMP.Primary)
 				{
 					maincamera = &cameraCMP.SceneCamera;
@@ -71,7 +66,7 @@ namespace Hazel
 			auto group = m_Rehistry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transformCMP, spriteRendererCMP] = group.get(entity);
+				auto [transformCMP, spriteRendererCMP] = group.get(entity);
 				Renderer2D::DrawQuad(transformCMP, spriteRendererCMP.Color);
 			}
 			Renderer2D::EndScene();

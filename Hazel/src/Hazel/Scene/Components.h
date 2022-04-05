@@ -56,22 +56,15 @@ namespace Hazel
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* Instance = nullptr;
-		std::function<void()> InstantiateFunction;
-		std::function<void()> DestoryInstanceFunction;
-		
-		std::function<void(ScriptableEntity*)> OnCreateFunction;
-		std::function<void(ScriptableEntity*, TimeStep)> OnUpdateFunction;
-		std::function<void(ScriptableEntity*)> OnDestoryFunction;
+
+		ScriptableEntity* (*InstantiateFunction)();
+		 void (*DestoryInstanceFunction)(NativeScriptComponent*);
+	
 		template<typename T>
 		void Bind()
 		{
-			InstantiateFunction = [&]() {Instance = new T(); };
-			DestoryInstanceFunction = [&]() {delete (T*)Instance; Instance = nullptr; };
-
-			OnCreateFunction = [](ScriptableEntity* Instance) {((T*)Instance)->OnCreate(); };
-			OnUpdateFunction = [](ScriptableEntity* Instance, TimeStep ts) {((T*)Instance)->OnUpdate(ts); };
-			OnDestoryFunction = [](ScriptableEntity* Instance) {((T*)Instance)->OnDestory(); };
-
+			InstantiateFunction = []() { return static_cast<ScriptableEntity*>(new T()); };
+			DestoryInstanceFunction = [](NativeScriptComponent* nsc) {delete nsc->Instance; nsc->Instance = nullptr;  };
 		}
 	};
 }
