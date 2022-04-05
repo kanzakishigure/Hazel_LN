@@ -28,9 +28,10 @@ namespace Hazel {
 		void SetOrthographicFarClip(float farClip) { m_OrthographicFar = farClip; }
 		float GetOrthographicFarClip() const { return m_OrthographicFar; }
 
-		void SetProjectionTypr(ProjectionType Type) { m_ProjectionType = Type; }
+		void SetProjectionType(ProjectionType Type) { m_ProjectionType = Type; }
 		ProjectionType GetProjectionType() { return m_ProjectionType; }
 
+		float GetAspectRatio() { return m_AspectRatio; }
 	private:
 		//now did't support persipective
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
@@ -40,6 +41,7 @@ namespace Hazel {
 
 		float m_OrthographicSize = 10.0f;
 		float m_OrthographicFar = 1.0f; float m_OrthographicNear = -1.0f;
+		float m_AspectRatio;
 
 	};
 }

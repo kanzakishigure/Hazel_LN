@@ -25,6 +25,7 @@ namespace Hazel
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
+		m_AspectRatio = (float)width / (float)height;
 		switch (m_ProjectionType)
 		{
 			//使用glm::内置函数直接生成透视矩阵

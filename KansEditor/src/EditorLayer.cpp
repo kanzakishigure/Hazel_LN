@@ -252,59 +252,59 @@ namespace Hazel
 
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	{
+		ImGui::Begin("ProjectSpecication");
+			
+		//blockevent
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_viewprotHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
+
+		ImGui::Separator();
+		ImGui::Text("Render2DStats");
+		ImGui::Text("DrawCalls: %d", Renderer2D::GetStats().DrawCalls);
+		ImGui::Text("QuadCount: %d", Renderer2D::GetStats().QuadCount);
+		ImGui::Text("TotalVertexCount: %d", Renderer2D::GetStats().GetTotalVertexCount());
+		ImGui::Separator();
+
+		if (squalEntity)
 		{
-			ImGui::Begin("ProjectSpecication");
-			
-			//blockevent
-			m_ViewportFocused = ImGui::IsWindowFocused();
-			m_viewprotHovered = ImGui::IsWindowHovered();
-			Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
-
 			ImGui::Separator();
-			ImGui::Text("Render2DStats");
-			ImGui::Text("DrawCalls: %d", Renderer2D::GetStats().DrawCalls);
-			ImGui::Text("QuadCount: %d", Renderer2D::GetStats().QuadCount);
-			ImGui::Text("TotalVertexCount: %d", Renderer2D::GetStats().GetTotalVertexCount());
+			ImGui::Text("Entity Tag :%s", squalEntity.GetComponent<TagComponent>().Tag.c_str());
+			ImGui::ColorEdit4("squar_color", glm::value_ptr(FlatColor));
+			squalEntity.GetComponent<SpriteRendererComponent>().Color = FlatColor;
 			ImGui::Separator();
-
-			if (squalEntity)
-			{
-				ImGui::Separator();
-				ImGui::Text("Entity Tag :%s", squalEntity.GetComponent<TagComponent>().Tag.c_str());
-				ImGui::ColorEdit4("squar_color", glm::value_ptr(FlatColor));
-				squalEntity.GetComponent<SpriteRendererComponent>().Color = FlatColor;
-				ImGui::Separator();
-			}
-\
-			ImGui::Separator();
-			ImGui::Checkbox("switch camera", &Switchcamera);
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
-			m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
-			ImGui::Separator();
-
-			
-			auto group	= m_ActiveScene->Reg().group(entt::get<TagComponent, CameraComponent>);
-			for (auto entity :group )
-			{
-				ImGui::Separator();
-				auto& [tagCMP, cameraCMP] = group.get(entity);
-				float size = cameraCMP.SceneCamera.GetOrthographicSize();
-				if (ImGui::DragFloat("Camera Size", &size))
-				{
-					cameraCMP.SceneCamera.SetOrthographicSize(size);
-					
-					
-				}
-				ImGui::Text("Entity Tag: %s", tagCMP.Tag.c_str());
-				ImGui::Text("Camera is fiexed Aspect: %s",  cameraCMP.FixedAspectRatio ? "TRUE":"FALSE");
-				ImGui::Text("Camera is Primary: %s", cameraCMP.Primary ? "TRUE":"FALSE");
-			}
-
-			
-			ImGui::End();
-
 		}
-		m_SceneHierachyPanel.OnImguiRender();
+\
+		ImGui::Separator();
+		ImGui::Checkbox("switch camera", &Switchcamera);
+		m_CameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
+		m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
+		ImGui::Separator();
+
+			
+		auto group	= m_ActiveScene->Reg().group(entt::get<TagComponent, CameraComponent>);
+		for (auto entity :group )
+		{
+			ImGui::Separator();
+			auto& [tagCMP, cameraCMP] = group.get(entity);
+			float size = cameraCMP.SceneCamera.GetOrthographicSize();
+			if (ImGui::DragFloat("Camera Size", &size))
+			{
+				cameraCMP.SceneCamera.SetOrthographicSize(size);	
+			}
+			ImGui::Text("Entity Tag: %s", tagCMP.Tag.c_str());
+			ImGui::Text("Camera is fiexed Aspect: %s",  cameraCMP.FixedAspectRatio ? "TRUE":"FALSE");
+			ImGui::Text("Camera is Primary: %s", cameraCMP.Primary ? "TRUE":"FALSE");
+		}
+
+			
+		ImGui::End();
+
+	}
+	//HierachyPanel
+	m_SceneHierachyPanel.OnImguiRender();
+	//HierachyPanel
 		//colorbuffer
 		{
 

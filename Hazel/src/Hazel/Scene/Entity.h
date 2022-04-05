@@ -44,6 +44,11 @@ namespace Hazel
 
 		operator bool() const { return (m_EntityHandle != entt::null) && m_Scene; }
 
+		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+		
+		bool operator== (const Entity& other) const { return other.m_EntityHandle == this->m_EntityHandle; }
+		bool operator!= (const Entity& other) const { return !(*this == other); }
+
 	private:
 		entt::entity m_EntityHandle{entt::null};
 		Scene* m_Scene = nullptr;
