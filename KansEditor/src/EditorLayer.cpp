@@ -36,16 +36,17 @@ namespace Hazel
 	
 		// scene init
 		{
+			//Create Scene
 			m_ActiveScene = CreateRef<Scene>();
 			squalEntity = m_ActiveScene->CreateEntity("SqualEntitu");
 			squalEntity.AddComponent<SpriteRendererComponent>(FlatColor);
 
+			//Create Scene Entity
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
 				auto& cmp = m_CameraEntity.AddComponent<CameraComponent>();
 				cmp.SceneCamera.SetViewportSize(1920, 1080);
 			}
-			
 			{
 				m_SecondCameraEntity = m_ActiveScene->CreateEntity("SecondCamera");
 				auto& cmp = m_SecondCameraEntity.AddComponent<CameraComponent>();		
@@ -54,6 +55,7 @@ namespace Hazel
 				cmp.Primary = false;
 			}
 			
+			//Native Script
 			class CameracontorlScript: public ScriptableEntity
 			{
 			public:
@@ -94,7 +96,11 @@ namespace Hazel
 
 			
 			m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameracontorlScript>();
-
+			
+			//HierachyPanel
+			{
+				m_SceneHierachyPanel = { m_ActiveScene };
+			}
 
 		}
 
@@ -298,7 +304,7 @@ namespace Hazel
 			ImGui::End();
 
 		}
-		
+		m_SceneHierachyPanel.OnImguiRender();
 		//colorbuffer
 		{
 

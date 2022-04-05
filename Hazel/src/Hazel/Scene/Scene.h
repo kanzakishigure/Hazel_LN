@@ -25,6 +25,7 @@ namespace  Hazel
 		entt::registry m_Rehistry;
 
 		friend class Entity;
+		friend class SceneHierachyPanel;
 	};
 
 	

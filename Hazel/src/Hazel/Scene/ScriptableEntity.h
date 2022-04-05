@@ -6,6 +6,7 @@ namespace Hazel
 	class ScriptableEntity
 	{
 	public:
+		virtual ~ScriptableEntity()=default;
 		template <typename T>
 		T& GetComponent()
 		{

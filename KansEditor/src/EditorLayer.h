@@ -1,6 +1,6 @@
 #pragma once
 #include <Hazel.h>
-
+#include "Panels/SceneHierachyPanel.h"
 namespace Hazel {
 	class EditorLayer :public Hazel::Layer
 	{
@@ -28,6 +28,10 @@ namespace Hazel {
 		Entity squalEntity;
 		Entity m_CameraEntity;
 		Entity m_SecondCameraEntity;
+
+		//HierachyPanel
+		SceneHierachyPanel m_SceneHierachyPanel;
+
 
 		glm::vec4 FlatColor = { 1.0,1.0,1.0,1.0 };
 	};
