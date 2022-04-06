@@ -33,7 +33,7 @@ namespace Hazel {
 
 		float GetAspectRatio() { return m_AspectRatio; }
 	private:
-		//now did't support persipective
+		//now didn't support Perspective
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
 		
 		float m_PerspectiveFOV = glm::radians(45.0f);;
