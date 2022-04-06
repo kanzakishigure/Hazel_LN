@@ -1,6 +1,7 @@
 #include "SceneHierachyPanel.h"
 #include "Hazel/Scene/Components.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Hazel/Utilities/KansUI.h"
 namespace Hazel
 {
 
@@ -85,11 +86,15 @@ namespace Hazel
 			{
 				ImGui::Separator();
 				auto& transformCMP = entity.GetComponent<TransformComponent>();
-				if (ImGui::DragFloat3("Tranform", glm::value_ptr(transformCMP.Transform[3]), 0.5f))
-				{
-					//if matrix is change,than calculate the rotation,scale,translate;
-				}
-				ImGui::Separator();
+
+				KansUI::DrawVec3Control("Position",transformCMP.Position);
+				
+				glm::vec3  rotation = glm::degrees(transformCMP.Rotation);
+				KansUI::DrawVec3Control("Rotation",rotation);
+				transformCMP.Rotation = glm::radians(rotation);
+				
+				KansUI::DrawVec3Control("Scale", transformCMP.Scale,1.0f);
+				
 				ImGui::TreePop();
 			}
 			
@@ -101,8 +106,101 @@ namespace Hazel
 				ImGui::Separator();
 				ImGui::LabelText("CameraComponent", "");
 				auto& cameraCMP = entity.GetComponent<CameraComponent>();
-				ImGui::Text("%s", ((bool)cameraCMP.SceneCamera.GetProjectionType()) ? "Orthographic" : "Perspective");
-				ImGui::Text("%f", cameraCMP.SceneCamera.GetAspectRatio());
+				auto& camera = entity.GetComponent<CameraComponent>().SceneCamera;
+				ImGui::Checkbox("Isprimary", &cameraCMP.Primary);
+				ImGui::Checkbox("FixedAspectRatio", &cameraCMP.FixedAspectRatio);
+				char* projectiontype[] = { "Perspective","Orthographic" };
+				char* curentprojectstring = projectiontype[(int)camera.GetProjectionType()];
+				if (ImGui::BeginCombo("Camera ProjectionType", curentprojectstring))
+				{
+					
+					for (int i = 0; i < 2; i++)
+					{
+						bool isSelected = curentprojectstring == projectiontype[i];
+						if (ImGui::Selectable(projectiontype[i], isSelected))
+						{
+							curentprojectstring = projectiontype[i];
+							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+				//Perspective
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+				{
+					//VerticalFOV
+					{
+						float verticalFOV = camera.GetPerspectiveVerticalFOV();
+						if (ImGui::DragFloat("VerticalFOV", &verticalFOV))
+						{
+							camera.SetPerspectiveVerticalFOV(verticalFOV);
+						}
+					}
+					//Near Clip
+					{
+						float nearClip = camera.GetPerspectiveNearClip();
+						if (ImGui::DragFloat("Near Clip", &nearClip))
+						{
+							camera.SetPerspectiveNearClip(nearClip);
+						}
+					}					
+					//Far Clip
+					{
+						float farClip = camera.GetPerspectiveFarClip();
+						if (ImGui::DragFloat("Far Clip", &farClip))
+						{
+							camera.SetPerspectiveFarClip(farClip);
+						}
+					}
+					//Exposure
+					{
+						float exposure = camera.GetExposure();
+						if (ImGui::DragFloat("Exposure", &exposure))
+						{
+							camera.SetExposure(exposure);
+						}
+					}
+				
+				}
+				//Orthographic
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+				{
+					//Size
+					{
+						float size = camera.GetOrthographicSize();
+						if (ImGui::DragFloat("Size", &size))
+						{
+							camera.SetOrthographicSize(size);
+						}
+					}
+					//Near Clip
+					{
+						float nearClip = camera.GetOrthographicNearClip();
+						if (ImGui::DragFloat("Near Clip", &nearClip))
+						{
+							camera.SetOrthographicNearClip(nearClip);
+						}
+					}
+					//Far Clip
+					{
+						float farClip = camera.GetOrthographicFarClip();
+						if (ImGui::DragFloat("Far Clip", &farClip))
+						{
+							camera.SetOrthographicFarClip(farClip);
+						}
+					}
+					//Exposure
+					{
+						float exposure = camera.GetExposure();
+						if (ImGui::DragFloat("Exposure", &exposure))
+						{
+							camera.SetExposure(exposure);
+						}
+					}
+					
+				}
 				ImGui::Separator();
 				ImGui::TreePop();
 			}
@@ -115,7 +213,7 @@ namespace Hazel
 				ImGui::Separator();
 				ImGui::LabelText("SpriteRendererComponent", "");
 				auto& color = entity.GetComponent<SpriteRendererComponent>().Color;
-				ImGui::DragFloat4("Color:", glm::value_ptr(color));
+				ImGui::ColorEdit4("Color:", glm::value_ptr(color));
 				ImGui::Separator();
 				ImGui::TreePop();
 			}

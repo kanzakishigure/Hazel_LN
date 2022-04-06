@@ -25,6 +25,7 @@ namespace Hazel
 
 		//update ScripteableEntity
 		{
+			
 			m_Rehistry.view<NativeScriptComponent>().each([=](auto entity,auto& nsc) {
 				
 				if (!nsc.Instance)
@@ -42,7 +43,7 @@ namespace Hazel
 		}
 
 		Camera* maincamera = nullptr;
-		glm::mat4* transform = nullptr;
+		glm::mat4* Cameratransform = nullptr ;
 		//rendererprep
 		{
 			//HazelTools::InstrumentationTimer timer();
@@ -53,7 +54,7 @@ namespace Hazel
 				if (cameraCMP.Primary)
 				{
 					maincamera = &cameraCMP.SceneCamera;
-					transform = &transformCMP.Transform;
+					Cameratransform = &transformCMP.GetTransform();
 				}
 				
 			}
@@ -62,12 +63,12 @@ namespace Hazel
 		//ScenenRenderer2D
 		if(maincamera!=nullptr)
 		{
-			Renderer2D::BeginScene(maincamera->GetProjectMatrix(), *transform);
+			Renderer2D::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
 			auto group = m_Rehistry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transformCMP, spriteRendererCMP] = group.get(entity);
-				Renderer2D::DrawQuad(transformCMP, spriteRendererCMP.Color);
+				Renderer2D::DrawQuad(transformCMP.GetTransform(), spriteRendererCMP.Texture, spriteRendererCMP.Color);
 			}
 			Renderer2D::EndScene();
 
@@ -95,7 +96,7 @@ namespace Hazel
 	Entity Scene::CreateEntity(const std::string name)
 	{
 		Entity e = { m_Rehistry.create(),this };
-		e.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		e.AddComponent<TransformComponent>();
 		auto& tag = e.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity": name;
 		return e;

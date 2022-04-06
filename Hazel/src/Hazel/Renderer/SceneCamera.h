@@ -14,24 +14,27 @@ namespace Hazel {
 		void SetOrthographic(float Size, float Near, float Far);
 		void SetViewportSize(uint32_t width, uint32_t height);
 		//设置透视摄像机参数
-		void SetPerspectiveVerticalFOV(float VerticalFOV) { m_PerspectiveFOV = glm::radians(VerticalFOV); }
+		void SetPerspectiveVerticalFOV(float VerticalFOV) { m_PerspectiveFOV = glm::radians(VerticalFOV); ReCalcaluteProjection(); }
 		float GetPerspectiveVerticalFOV() const { return glm::degrees(m_PerspectiveFOV); }
-		void SetPerspectiveNearClip(float NearClip) { m_PerspectiveNear = NearClip; }
+		void SetPerspectiveNearClip(float NearClip) { m_PerspectiveNear = NearClip;ReCalcaluteProjection(); }
 		float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
-		void SetPerspectiveFarClip(float FarClip) { m_PerspectiveFar = FarClip; }
+		void SetPerspectiveFarClip(float FarClip) { m_PerspectiveFar = FarClip;ReCalcaluteProjection(); }
 		float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
 		//设置正交摄像机参数
-		void SetOrthographicSize(float size) { m_OrthographicSize = size; }
+		void SetOrthographicSize(float size) { m_OrthographicSize = size; ReCalcaluteProjection();}
 		float GetOrthographicSize() const { return m_OrthographicSize; }
-		void SetOrthographicNearClip(float nearClip) { m_OrthographicNear = nearClip; }
+		void SetOrthographicNearClip(float nearClip) { m_OrthographicNear = nearClip;ReCalcaluteProjection(); }
 		float GetOrthographicNearClip() const { return m_OrthographicNear; }
-		void SetOrthographicFarClip(float farClip) { m_OrthographicFar = farClip; }
+		void SetOrthographicFarClip(float farClip) { m_OrthographicFar = farClip;ReCalcaluteProjection(); }
 		float GetOrthographicFarClip() const { return m_OrthographicFar; }
 
-		void SetProjectionType(ProjectionType Type) { m_ProjectionType = Type; }
+		void SetProjectionType(ProjectionType Type) { m_ProjectionType = Type; ReCalcaluteProjection();}
 		ProjectionType GetProjectionType() { return m_ProjectionType; }
 
 		float GetAspectRatio() { return m_AspectRatio; }
+		void SetAspectRatio(float aspectratio) { m_AspectRatio = aspectratio; ReCalcaluteProjection();}
+		
+		void ReCalcaluteProjection();
 	private:
 		//now didn't support Perspective
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
@@ -41,6 +44,7 @@ namespace Hazel {
 
 		float m_OrthographicSize = 10.0f;
 		float m_OrthographicFar = 1.0f; float m_OrthographicNear = -1.0f;
+		
 		float m_AspectRatio;
 
 	};

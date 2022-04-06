@@ -342,3 +342,12 @@ healthchecksdb
 bin/
 #build bin-int
 bin-int/
+#vs file
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.csproj
+**.nsight-gfxproj
+**.DotSettings
+**.user

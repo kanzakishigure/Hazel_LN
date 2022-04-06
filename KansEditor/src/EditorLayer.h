@@ -25,15 +25,14 @@ namespace Hazel {
 		bool m_ViewportFocused= false,m_viewprotHovered = false;
 		bool Switchcamera = false;
 		Ref<Scene> m_ActiveScene;
-		Entity squalEntity;
+
 		Entity m_CameraEntity;
 		Entity m_SecondCameraEntity;
 
 		//HierachyPanel
 		SceneHierachyPanel m_SceneHierachyPanel;
 
-
-		glm::vec4 FlatColor = { 1.0,1.0,1.0,1.0 };
+		
 	};
 
 

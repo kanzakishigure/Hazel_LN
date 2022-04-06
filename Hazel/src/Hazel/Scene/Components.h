@@ -1,8 +1,10 @@
 #pragma once
 #include <string.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Hazel/Renderer/SceneCamera.h"
 #include "Hazel/Scene/ScriptableEntity.h"
+#include "Hazel/Renderer/Texture.h"
 namespace Hazel 
 {
 
@@ -18,15 +20,30 @@ namespace Hazel
 	};
 	struct  TransformComponent
 	{
-		glm::mat4 Transform = glm::mat4(1.0f);
+
+		glm::vec3 Position = glm::vec3(0.0f);
+		//rotation here is radians
+		glm::vec3 Rotation = glm::vec3(0.0f);
+
+		glm::vec3 Scale = glm::vec3(1.0f);
+
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(glm::mat4 transfrom)
-			:Transform(transfrom)
+		TransformComponent(glm::vec3 position , glm::vec3 rotation ,glm::vec3 scale )
+			:Position(position),Rotation(rotation),Scale(scale)
 		{}
 
-		operator glm::mat4& () { return Transform; }
-		operator const glm::mat4& () const { return Transform; }
+		 glm::mat4 GetTransform () const
+		{
+			glm::mat4  translation = glm::translate(glm::mat4(1.0f), Position);
+
+			glm::mat4  ratation = glm::rotate(glm::mat4(1.0f), (Rotation.x), { 1.0f,0.0f,0.0f });
+			ratation *= glm::rotate(ratation,  (Rotation.y), { 0.0,1.0f,0.0f });
+			ratation *= glm::rotate(ratation,  (Rotation.z), { 0.0f,0.0f,1.0f });
+
+			glm::mat4 scale = glm::scale(glm::mat4(1.0f), Scale);
+			return translation * ratation * scale;
+		}
 
 	};
 	struct CameraComponent
@@ -41,16 +58,29 @@ namespace Hazel
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color = { 1.0f ,1.0f ,1.0f ,1.0f };
+		Ref<Texture2D> Texture;
 		//目前未实现texture
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent& ) = default;
-		SpriteRendererComponent(glm::vec4 color)
-			:Color(color)
-		{}
+		SpriteRendererComponent(glm::vec4 color,Ref<Texture2D> texture = nullptr )
+			:Color(color),Texture(texture)
+		{
+			//Set The WhiteTexture
+			if (texture==nullptr)
+			{
+				Texture =  Texture2D::Create(1, 1);
+				uint32_t data = 0xffffffff;
+				Texture->SetData(&data, sizeof(int));
+			}
+		}
 	};
 	struct MeshComponent
 	{
-		glm::vec3* vertex;
+		//Mesh vertex;
+		//mesh collider?
+		//mesh renderer
+		//meshCMP == mesh?
+	
 	};
 
 	struct NativeScriptComponent

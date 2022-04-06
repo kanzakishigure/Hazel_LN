@@ -18,6 +18,8 @@ namespace Hazel
 		//返回曝光度
 		float GetExposure() const { return m_Exposure; }
 		float& GetExposure() { return m_Exposure; }
+		void SetExposure(float exposure) { m_Exposure = exposure; }
+
 		//设定相机曝光度
 	protected:
 		glm::mat4 m_ProjectionMatrix;

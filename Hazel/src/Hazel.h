@@ -10,10 +10,12 @@
 #include "Hazel/Renderer/OrthographicCameraController.h"
 
 #include "Hazel/Core/Layer.h"
-//------Entity---------------
+//------Entity/Scene---------------
 #include "Hazel/Scene/Scene.h"
 #include "Hazel/Scene/Entity.h"
 #include "Hazel/Scene/Components.h"
+//------UI---------------
+#include "Hazel/Utilities/KansUI.h"
 //------renderer---------------
 #include "Hazel/Renderer/Renderer.h"
 #include "Hazel/Renderer/Renderer2D.h"

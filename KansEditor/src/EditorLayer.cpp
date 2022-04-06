@@ -38,8 +38,15 @@ namespace Hazel
 		{
 			//Create Scene
 			m_ActiveScene = CreateRef<Scene>();
-			squalEntity = m_ActiveScene->CreateEntity("SqualEntitu");
-			squalEntity.AddComponent<SpriteRendererComponent>(FlatColor);
+			{
+				auto SunEntity = m_ActiveScene->CreateEntity("SunEntitu");
+				SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
+			}
+			{
+				auto RedEntity = m_ActiveScene->CreateEntity("Entity B");
+				RedEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 151.0f / 256.0f, 52.0f / 256.0f, 68.0f / 256.0f,1.0f });
+			}
+			
 
 			//Create Scene Entity
 			{
@@ -56,50 +63,51 @@ namespace Hazel
 			}
 			
 			//Native Script
-			class CameracontorlScript: public ScriptableEntity
 			{
-			public:
-				void OnCreate() override
+				class CameracontorlScript : public ScriptableEntity
 				{
-					HZ_INFO("On create!");
-				}
+				public:
+					void OnCreate() override
+					{
 
-				void OnUpdate(TimeStep ts)override
+					}
+
+					void OnUpdate(TimeStep ts)override
+					{
+
+						auto& transformCMP = GetComponent<TransformComponent>();
+						if (Input::IsKeyPressed(Key::W))
+						{
+							transformCMP.Position.y += ts * 5.0f;
+						}
+						if (Input::IsKeyPressed(Key::S))
+						{
+							transformCMP.Position.y -= ts * 5.0f;
+						}
+						if (Input::IsKeyPressed(Key::A))
+						{
+							transformCMP.Position.x -= ts * 5.0f;
+
+						}
+						if (Input::IsKeyPressed(Key::D))
+						{
+							transformCMP.Position.x += ts * 5.0f;
+						}
+
+					}
+
+					void OnDestory() override
+					{
+					}
+				};
+
+
+				m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameracontorlScript>();
+
+				//HierachyPanel
 				{
-					HZ_INFO("On Update!");
-
-					auto& transformCMP =  GetComponent<TransformComponent>();
-					if (Input::IsKeyPressed(Key::W))
-					{
-						transformCMP.Transform[3][1] += ts * 5.0f;
-					}
-					if (Input::IsKeyPressed(Key::S))
-					{
-						transformCMP.Transform[3][1] -= ts * 5.0f;
-					}
-					if (Input::IsKeyPressed(Key::A))
-					{
-						transformCMP.Transform[3][0] += ts * 5.0f;
-					}
-					if (Input::IsKeyPressed(Key::D))
-					{
-						transformCMP.Transform[3][0] -= ts * 5.0f;
-					}
-					
+					m_SceneHierachyPanel = { m_ActiveScene };
 				}
-
-				void OnDestory() override
-				{
-					HZ_INFO("On destory!");
-				}
-			};
-
-			
-			m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameracontorlScript>();
-			
-			//HierachyPanel
-			{
-				m_SceneHierachyPanel = { m_ActiveScene };
 			}
 
 		}
@@ -112,7 +120,7 @@ namespace Hazel
 		HZ_PROFILE_FUCTION();
 		HZ_CORE_INFO("call detach");
 		Renderer2D::Shutdown();
-
+		
 	}
 
 	void EditorLayer::OnUpdate(TimeStep ts)
@@ -254,57 +262,24 @@ namespace Hazel
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	{
 		ImGui::Begin("ProjectSpecication");
-			
+
 		//blockevent
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_viewprotHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
-
+		//renderStats
 		ImGui::Separator();
 		ImGui::Text("Render2DStats");
 		ImGui::Text("DrawCalls: %d", Renderer2D::GetStats().DrawCalls);
 		ImGui::Text("QuadCount: %d", Renderer2D::GetStats().QuadCount);
 		ImGui::Text("TotalVertexCount: %d", Renderer2D::GetStats().GetTotalVertexCount());
 		ImGui::Separator();
-
-		if (squalEntity)
-		{
-			ImGui::Separator();
-			ImGui::Text("Entity Tag :%s", squalEntity.GetComponent<TagComponent>().Tag.c_str());
-			ImGui::ColorEdit4("squar_color", glm::value_ptr(FlatColor));
-			squalEntity.GetComponent<SpriteRendererComponent>().Color = FlatColor;
-			ImGui::Separator();
-		}
-\
-		ImGui::Separator();
-		ImGui::Checkbox("switch camera", &Switchcamera);
-		m_CameraEntity.GetComponent<CameraComponent>().Primary = !Switchcamera;
-		m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = Switchcamera;
-		ImGui::Separator();
-
-			
-		auto group	= m_ActiveScene->Reg().group(entt::get<TagComponent, CameraComponent>);
-		for (auto entity :group )
-		{
-			ImGui::Separator();
-			auto& [tagCMP, cameraCMP] = group.get(entity);
-			float size = cameraCMP.SceneCamera.GetOrthographicSize();
-			if (ImGui::DragFloat("Camera Size", &size))
-			{
-				cameraCMP.SceneCamera.SetOrthographicSize(size);	
-			}
-			ImGui::Text("Entity Tag: %s", tagCMP.Tag.c_str());
-			ImGui::Text("Camera is fiexed Aspect: %s",  cameraCMP.FixedAspectRatio ? "TRUE":"FALSE");
-			ImGui::Text("Camera is Primary: %s", cameraCMP.Primary ? "TRUE":"FALSE");
-		}
-
-			
 		ImGui::End();
 
 	}
 	//HierachyPanel
 	m_SceneHierachyPanel.OnImguiRender();
-	//HierachyPanel
+	//Viewport
 		//colorbuffer
 		{
 

@@ -29,13 +29,31 @@ namespace Hazel
 		switch (m_ProjectionType)
 		{
 			//使用glm::内置函数直接生成透视矩阵
-		case ProjectionType::Perspective: 
+		case ProjectionType::Perspective:
 			m_ProjectionMatrix = glm::perspectiveFov(m_PerspectiveFOV, (float)width, (float)height, m_PerspectiveNear, m_PerspectiveFar);
 			break;
 			//经过视口变化
 		case ProjectionType::Orthographic:
 			float aspect = (float)width / (float)height;
 			float width = m_OrthographicSize * aspect;
+			float height = m_OrthographicSize;
+			m_ProjectionMatrix = glm::ortho(-width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f);
+			break;
+
+		}
+	}
+
+	void SceneCamera::ReCalcaluteProjection()
+	{
+		switch (m_ProjectionType)
+		{
+			//使用glm::内置函数直接生成透视矩阵
+		case ProjectionType::Perspective:
+			m_ProjectionMatrix = glm::perspective(m_PerspectiveFOV, m_AspectRatio,m_PerspectiveNear, m_PerspectiveFar);
+			break;
+			//经过视口变化
+		case ProjectionType::Orthographic:
+			float width = m_OrthographicSize * m_AspectRatio;
 			float height = m_OrthographicSize;
 			m_ProjectionMatrix = glm::ortho(-width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f);
 			break;
