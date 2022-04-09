@@ -32,7 +32,6 @@ namespace Hazel {
 		//HierachyPanel
 		SceneHierachyPanel m_SceneHierachyPanel;
 
-		
 	};
 
 

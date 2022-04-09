@@ -6,16 +6,16 @@
 namespace Hazel
 {
 
- Ref<Material> Material::Create(const Ref<Shader>& shader,const std::string& name)
-{
-	switch (Renderer::GetAPI())
+	Ref<Material> Material::Create(const Ref<Shader>& shader, const std::string& name)
 	{
-	case RendererAPI::API::NONE:    HZ_CORE_ASSERT(false, "RendererAPI::NONE is not support"); return nullptr;
-	case RendererAPI::API::OPENGL:  std::make_shared<OpenGLMaterial>(shader,name);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::NONE:    HZ_CORE_ASSERT(false, "RendererAPI::NONE is not support"); return nullptr;
+		case RendererAPI::API::OPENGL:  return CreateRef<OpenGLMaterial>(shader, name);
+		}
+		HZ_CORE_ASSERT(false, "unknow RendererAPI");
+		return nullptr;
 	}
-	HZ_CORE_ASSERT(false, "unknow RendererAPI");
-	return nullptr;
-}
 
 
 }

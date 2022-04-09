@@ -18,6 +18,7 @@ namespace Hazel {
 		virtual uint32_t GetRenererID() const override { return m_RendererID; }
 		virtual uint32_t GetHeight() const override { return m_Height; };
 		virtual uint32_t GetWidth() const override { return m_Width; };
+		virtual const std::string GetPath() const override { return path; }
 	public:
 		virtual bool operator==(const Texture& other) const override
 		{
@@ -28,7 +29,7 @@ namespace Hazel {
 		uint32_t m_Height;
 		uint32_t m_Width;
 		uint32_t m_RendererID;
-		std::string path;
 		GLenum m_InternalFormat, m_DataFormat;
+		std::string path;
 	};
 }

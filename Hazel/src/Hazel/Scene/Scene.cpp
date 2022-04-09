@@ -5,13 +5,14 @@
 #include "Entity.h"
 #include "Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
-
+#include "Hazel/Renderer/Renderer.h"
 
 namespace Hazel
 {	
 
 	Scene::Scene()
 	{
+		
 
 	}
 
@@ -69,11 +70,27 @@ namespace Hazel
 			{
 				auto [transformCMP, spriteRendererCMP] = group.get(entity);
 				Renderer2D::DrawQuad(transformCMP.GetTransform(), spriteRendererCMP.Texture, spriteRendererCMP.Color);
+
 			}
 			Renderer2D::EndScene();
 
 		}
+#if 1
+	    //Mesh renderer
+		if (maincamera != nullptr)
+		{
+			Renderer::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
 
+			auto group = m_Rehistry.view<TransformComponent,MeshComponent>();
+			for (auto entity: group)
+			{
+				auto [transformCMP, meshCMP] = group.get(entity);
+				Renderer::Submit(meshCMP.MesHSource->GetMaterial(), meshCMP.MesHSource, transformCMP.GetTransform());
+			}
+			
+			Renderer::EndScene();
+		}
+#endif		
 		
 	}	
 

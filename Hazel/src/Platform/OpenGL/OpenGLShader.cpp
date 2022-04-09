@@ -291,4 +291,16 @@ namespace Hazel {
 		UploadUniformIntArray(name,count,value);
 	}
 
+	const void OpenGLShader::SetShaderBuffer(ShaderBufferLayout layout)
+	{
+		uint32_t size = 0;
+		for (auto element : layout.GetElements())
+		{
+			m_Shaderbuffer.ShaderUniforms[element.Name] = ShaderUniform{element.Name,element.Size,element.Offset,element.Type};
+			size += element.Size;
+		}
+		m_Shaderbuffer.Size = size;
+
+	}
+
 }

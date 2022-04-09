@@ -39,8 +39,8 @@ namespace Hazel
 		HZ_PROFILE_FUCTION();
 		while (m_Running)
 		{
-			float time = glfwGetTime();
-			m_TimeStep = TimeStep(glfwGetTime()-m_LastFrameTime );
+			float time = (float)glfwGetTime();
+			m_TimeStep = TimeStep(float(glfwGetTime()-m_LastFrameTime) );
 			m_LastFrameTime = time;
 
 			

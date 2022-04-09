@@ -5,6 +5,7 @@
 #include "Hazel/Renderer/SceneCamera.h"
 #include "Hazel/Scene/ScriptableEntity.h"
 #include "Hazel/Renderer/Texture.h"
+#include "Hazel/Renderer/Mesh.h"
 namespace Hazel 
 {
 
@@ -74,14 +75,6 @@ namespace Hazel
 			}
 		}
 	};
-	struct MeshComponent
-	{
-		//Mesh vertex;
-		//mesh collider?
-		//mesh renderer
-		//meshCMP == mesh?
-	
-	};
 
 	struct NativeScriptComponent
 	{
@@ -96,5 +89,20 @@ namespace Hazel
 			InstantiateFunction = []() { return static_cast<ScriptableEntity*>(new T()); };
 			DestoryInstanceFunction = [](NativeScriptComponent* nsc) {delete nsc->Instance; nsc->Instance = nullptr;  };
 		}
+	};
+
+	struct MeshComponent
+	{
+		//TODO
+		//use subMeh vector;
+		//MeshSource now have the material ,SubMesh 
+		Ref<MeshSource> MesHSource =nullptr;
+		MeshComponent() = default;
+		MeshComponent(const MeshComponent&) = default;
+		MeshComponent(MeshSource* meshsource)
+		:MesHSource(meshsource){}
+		//temp know We Don't have any asset system,should have not instance in the Component 
+		//Ref<Material> MeshMaterial;
+
 	};
 }

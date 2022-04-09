@@ -93,7 +93,7 @@ void Sandbox2DLayer::OnUpdate(Hazel::TimeStep ts)
 
 
 		// texturesheet TEST
-#if 0
+#if 1
 		Hazel::Renderer2D::DrawQuad({ 0.0f,0.0f }, { 2.0f,3.0f }, Y_roof[0]);
 		Hazel::Renderer2D::DrawQuad({ 0.0f,2.0f }, { 1.0F,1.0F }, W_Rockstairs[0]);
 		Hazel::Renderer2D::DrawQuad({ 1.0f,2.0f }, { 1.0F,1.0F }, W_Rockstairs[1]);
@@ -103,7 +103,7 @@ void Sandbox2DLayer::OnUpdate(Hazel::TimeStep ts)
 
 
 //batch rendering TEST
-#if 1
+#if 0
 		for (float i =-5.0f;i<5.0f;i+=0.5f)
 		{
 			for (float j = -5.0f; j <5.0f; j += 0.5f)

@@ -3,22 +3,90 @@
 #include "OpenGLShader.h"
 namespace Hazel {
 	
-	void OpenGLMaterial::Set(std::string name, int value)
+	
+	void OpenGLMaterial::SetIntArray(const std::string& name, const int count, const int* value)
 	{
-		//TODO:
-		//将list容器中对应的shader所需要的全局变量进行赋值
-		//std::dynamic_pointer_cast<OpenGLShader>(m_Shaders.back())->UploadUniformInt(name,value);
-	}
-	void OpenGLMaterial::Set(std::string name, float value)
-	{
-		//TODO:
-		//将list容器中对应的shader所需要的全局变量进行赋值
-		//std::dynamic_pointer_cast<OpenGLShader>(m_Shaders.back())->UploadUniformInt(name, value);
+		//TO DO 
+		//push to buffer
+		m_Shader->SetIntArray(name, count, value);
 	}
 
-	void OpenGLMaterial::Get() const
+	OpenGLMaterial::OpenGLMaterial(const Ref<Shader>& shader, const std::string& name /*= " "*/)
+		:m_Shader(shader),m_Name(name)
 	{
+		Init();
 	}
-	
+
+	OpenGLMaterial::~OpenGLMaterial()
+	{
+		m_UniformBuffer.Realse();
+	}
+
+	void OpenGLMaterial::Init()
+	{
+
+		AllocBuffer();
+	}
+
+	void OpenGLMaterial::AllocBuffer()
+	{
+		auto shaderbuffer = m_Shader->GetShaderBuffer();
+		uint32_t size = shaderbuffer.Size;
+		m_UniformBuffer.Allocate(size);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, const glm::mat4& value)
+	{
+		m_Shader->SetMat4(name, value);
+		Set<glm::mat4>(name,value);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, float value)
+	{
+		m_Shader->SetFloat(name, value);
+		Set<float>(name, value);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, const glm::vec2& value)
+	{
+		m_Shader->SetFloat2(name, value);
+		Set<glm::vec2>(name, value);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, const glm::vec3& value)
+	{
+		m_Shader->SetFloat3(name, value);
+		Set<glm::vec3>(name, value);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, const glm::vec4& value)
+	{
+		m_Shader->SetFloat4(name, value);
+		Set<glm::vec4>(name, value);
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, int value)
+	{
+		m_Shader->SetInt(name, value);
+		Set<int>(name, value);
+	}
+
+	ShaderUniform* OpenGLMaterial::FindUniform(const std::string& name)
+	{
+
+		const ShaderBuffer& shaderbuffer =  m_Shader->GetShaderBuffer();
+		
+		if (shaderbuffer.ShaderUniforms.size()>0)
+		{
+			if (shaderbuffer.ShaderUniforms.find(name) == shaderbuffer.ShaderUniforms.end())
+			{
+				return nullptr;
+			}
+			auto& uniform = shaderbuffer.ShaderUniforms.at(name);
+			return (ShaderUniform*)&(uniform);
+		}
+		return nullptr;
+		
+	}
 
 }

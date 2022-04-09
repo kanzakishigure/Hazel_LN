@@ -2,6 +2,9 @@
 #include "RenderCommand.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
 #include "Shader.h"
+#include "Hazel/Renderer/Material.h"
+#include "Hazel/Renderer/Mesh.h"
+#include "Hazel/Renderer/Camera.h"
 namespace Hazel {
 	
 	class Renderer
@@ -9,9 +12,10 @@ namespace Hazel {
 	public:
 		
 		static void	Init();
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform);
+		static void Submit(const Ref<Material>& material, const Ref<MeshSource>& mesh, const glm::mat4& transform);
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }

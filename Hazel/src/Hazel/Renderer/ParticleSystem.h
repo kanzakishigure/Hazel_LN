@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Hazel/Core/TimeStep.h"
 #include "Hazel/Renderer/OrthographicCameraController.h"
 namespace Hazel

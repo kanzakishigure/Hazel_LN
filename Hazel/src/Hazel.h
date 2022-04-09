@@ -27,6 +27,9 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/FrameBuffer.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
+
+#include "Hazel/Renderer/Mesh.h"
+#include "Hazel/Renderer/Material.h"
 //-----script---------------
 #include "Hazel/Scene/ScriptableEntity.h"
 

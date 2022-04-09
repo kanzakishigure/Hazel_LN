@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static const int S_mapwidth = 24;
 static const char* S_mapTiles= "";
@@ -39,18 +38,21 @@ namespace Hazel
 			//Create Scene
 			m_ActiveScene = CreateRef<Scene>();
 			{
-				auto SunEntity = m_ActiveScene->CreateEntity("SunEntitu");
-				SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
+				auto SunEntity = m_ActiveScene->CreateEntity("Entity A");
+				auto& spritCMP = SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
+				//spritCMP.Texture = Hazel::Texture2D::Create("assets/textures/hutao.png");
 			}
 			{
 				auto RedEntity = m_ActiveScene->CreateEntity("Entity B");
-				RedEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 151.0f / 256.0f, 52.0f / 256.0f, 68.0f / 256.0f,1.0f });
+				auto& spritCMP  = RedEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 151.0f / 256.0f, 52.0f / 256.0f, 68.0f / 256.0f,1.0f });
+				spritCMP.Texture = Hazel::Texture2D::Create("F:/Kans3D/Hazel/KansEditor/assets/textures/Checkerboard.png");
 			}
 			
-
 			//Create Scene Entity
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
+				auto& transfromCMP =  m_CameraEntity.GetComponent<TransformComponent>();
+				transfromCMP.Position = { 0.0f,10.0f,45.0f };
 				auto& cmp = m_CameraEntity.AddComponent<CameraComponent>();
 				cmp.SceneCamera.SetViewportSize(1920, 1080);
 			}
@@ -61,7 +63,23 @@ namespace Hazel
 				cmp.FixedAspectRatio = true;
 				cmp.Primary = false;
 			}
-			
+
+			// createMesh test
+#if 1
+			{
+				auto hutaoEntity = m_ActiveScene->CreateEntity("HuTao");
+				auto& meshCMP =  hutaoEntity.AddComponent<MeshComponent>();
+				auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht.fbx");
+				auto Meshshader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
+				Meshshader->SetShaderBuffer({
+					{ShaderDataType::Mat4,"U_ViewProjection"},
+					{ShaderDataType::Mat4,"U_Transform"}
+					});
+				Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
+				MeshSrouce->SetMaterial(StaticMeshShader);
+				meshCMP.MesHSource = MeshSrouce;
+			}
+#endif			
 			//Native Script
 			{
 				class CameracontorlScript : public ScriptableEntity
@@ -151,6 +169,8 @@ namespace Hazel
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 		
+	
+
 		//rendering
 		{
 			HZ_PROFILE_SCOPE("rendering")
@@ -173,7 +193,7 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUCTION();
 
-//imgui docking code
+//Imgui docking code
 #if 1
 		static bool p_open = true;
 		static bool opt_fullscreen = true;
@@ -263,7 +283,7 @@ namespace Hazel
 	{
 		ImGui::Begin("ProjectSpecication");
 
-		//blockevent
+		//BlockEvent
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_viewprotHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(m_ViewportFocused||m_viewprotHovered);
@@ -280,9 +300,9 @@ namespace Hazel
 	//HierachyPanel
 	m_SceneHierachyPanel.OnImguiRender();
 	//Viewport
-		//colorbuffer
+		//Color FrameBuffer
+		if (1)
 		{
-
 			ImGui::Begin("ViewPort1");
 			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
 			if (m_ViewportSize != *(glm::vec2*) & viewportsize)
@@ -292,13 +312,14 @@ namespace Hazel
 				//m_Framebuffer->Resize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 				//m_CameraController.OnResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 			}
-			uint32_t colorframebufferID = m_Framebuffer->GetColorAttachmentRendererID();
+			uint64_t colorframebufferID = (uint64_t)m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)colorframebufferID, viewportsize, ImVec2(0, 1), ImVec2(1, 0));
 
 			ImGui::End();
 		}
 
-		//depthbuffer
+		//Depth FrameBuffer
+		if(0)
 		{
 			ImGui::Begin("ViewPort2");
 			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
@@ -311,7 +332,7 @@ namespace Hazel
 			}
 
 
-			uint32_t depthframebufferID = m_Framebuffer->GetDepthAttachmentRendererID();
+			uint64_t depthframebufferID =(uint64_t)m_Framebuffer->GetDepthAttachmentRendererID();
 			ImGui::Image((void*)depthframebufferID, viewportsize, ImVec2(0, 1), ImVec2(1, 0));
 
 			ImGui::End();

@@ -99,7 +99,7 @@ public:
 		Hazel::RenderCommand::Clear();
 
 		bluetransform = glm::scale(bluetransform, glm::vec3(0.1, 0.1, 0.1));
-		Hazel::Renderer::BeginScene(m_CameraController.GetOrthographicCamera());
+		//Hazel::Renderer::BeginScene(m_CameraController.GetOrthographicCamera());
 		for (uint32_t i = 0; i < 20; i++)
 		{
 			for (uint32_t j = 0;j < 20; j++)

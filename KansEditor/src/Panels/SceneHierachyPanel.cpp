@@ -211,10 +211,11 @@ namespace Hazel
 			if (ImGui::TreeNodeEx("SpriteRendererComponent"))
 			{
 				ImGui::Separator();
-				ImGui::LabelText("SpriteRendererComponent", "");
-				auto& color = entity.GetComponent<SpriteRendererComponent>().Color;
+				auto& colorCMP = entity.GetComponent<SpriteRendererComponent>();
+				auto& color = colorCMP.Color;
 				ImGui::ColorEdit4("Color:", glm::value_ptr(color));
 				ImGui::Separator();
+				ImGui::Text("Texture source Path: %s",colorCMP.Texture->GetPath().c_str());
 				ImGui::TreePop();
 			}
 			

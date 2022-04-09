@@ -16,6 +16,15 @@ IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["GLM"] = "Hazel/vendor/glm"
 IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
 IncludeDir["entt"] = "Hazel/vendor/entt/include"
+IncludeDir["assimp"] = "Hazel/vendor/assimp/include"
+
+Library = {}
+Library["Assimp_Debug"] = "%{_WORKING_DIR}/Hazel/vendor/assimp/bin/Debug/assimp-vc142-mtd.lib"
+Library["Assimp_Release"] = "%{_WORKING_DIR}/Hazel/vendor/assimp/bin/Release/assimp-vc142-mt.lib"
+
+Binaries = {}
+Binaries["Assimp_Debug"] = "%{_WORKING_DIR}/Hazel/vendor/assimp/bin/Debug/assimp-vc142-mtd.dll"
+Binaries["Assimp_Release"] = "%{_WORKING_DIR}/Hazel/vendor/assimp/bin/Release/assimp-vc142-mt.dll"
 
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
@@ -54,15 +63,17 @@ project "Hazel"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.assimp}"
         
     }
     links
     {
         "GLFW",
-        "opengl32.lib",
         "Glad",
-        "ImGui"
+        "ImGui",
+        "opengl32.lib"
+        
     }
     filter "system:windows" 
         systemversion "latest" 
@@ -113,7 +124,8 @@ project "Sandbox"
         "Hazel/src",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.assimp}"
     }
     links
     {
@@ -160,11 +172,14 @@ project "KansEditor"
         }
         includedirs 
         { 
+            "Hazel/vendor/assimp/include",
             "Hazel/vendor/spdlog/include",
             "Hazel/src",
             "%{IncludeDir.GLM}",
             "%{IncludeDir.ImGui}",
-            "%{IncludeDir.entt}"
+            "%{IncludeDir.entt}",
+            "%{IncludeDir.assimp}"
+
         }
         links
         {
@@ -184,11 +199,37 @@ project "KansEditor"
             defines "HZ_DEBUG" 
             runtime "Debug"
             symbols "on"
+            links
+            {
+                "%{Library.Assimp_Debug}"
+            }
+            postbuildcommands 
+            {
+                '{COPY} "%{Binaries.Assimp_Debug}" "%{cfg.targetdir}"'
+            }
+           
         filter "configurations:Release"
             defines  "HZ_RELEASE" 
             runtime "Release"
             optimize "on"
+            links
+            {
+                "%{Library.Assimp_Release}"
+            }
+            postbuildcommands 
+            {
+                '{COPY} "%{Binaries.Assimp_Release}" "%{cfg.targetdir}"'
+            }
+            
         filter "configurations:Dist"
             defines  "HZ_DIST" 
             runtime "Release"
             optimize "on"
+            links
+            {
+                "%{Library.Assimp_Release}"
+            }
+            postbuildcommands 
+            {
+                '{COPY} "%{Binaries.Assimp_Release}" "%{cfg.targetdir}"'
+            }
