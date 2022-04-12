@@ -52,7 +52,7 @@ namespace Hazel
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
 				auto& transfromCMP =  m_CameraEntity.GetComponent<TransformComponent>();
-				transfromCMP.Position = { 0.0f,10.0f,45.0f };
+				transfromCMP.Position = { 0.0f,0.0f,5.0f };
 				auto& cmp = m_CameraEntity.AddComponent<CameraComponent>();
 				cmp.SceneCamera.SetViewportSize(1920, 1080);
 			}
@@ -78,6 +78,8 @@ namespace Hazel
 				Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
 				MeshSrouce->SetMaterial(StaticMeshShader);
 				meshCMP.MesHSource = MeshSrouce;
+				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
+				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
 			}
 #endif			
 			//Native Script

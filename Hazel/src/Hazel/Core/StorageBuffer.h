@@ -31,7 +31,7 @@ namespace Hazel
 			std::memset(Data, 0, size);
 			Size = size;
 		}
-		void Realse()
+		void Release()
 		{
 			delete[] (byte*)Data;
 			Size = 0;

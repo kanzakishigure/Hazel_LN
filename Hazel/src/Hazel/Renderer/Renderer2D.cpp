@@ -160,8 +160,8 @@ namespace Hazel {
 	void Renderer2D::Shutdown()
 	{
 		HZ_PROFILE_FUCTION();
-		//delete[] s_Data.QuadVertexBufferBase;
-		HZ_WARN(" vertex memary is free");
+		delete[] s_Data.QuadVertexBufferBase;
+		HZ_WARN(" render2d quadsbuffer memary is free");
 	}
 
 	void Renderer2D::Flush()

@@ -19,7 +19,8 @@ namespace Hazel {
 
 	OpenGLMaterial::~OpenGLMaterial()
 	{
-		m_UniformBuffer.Realse();
+		m_UniformBuffer.Release();
+		HZ_INFO("Release StorageBuffer in Material");
 	}
 
 	void OpenGLMaterial::Init()
