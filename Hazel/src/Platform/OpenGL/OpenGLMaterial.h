@@ -23,7 +23,7 @@ namespace Hazel {
 		virtual void Set(const std::string& name, int value) override;
 
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) override;
-
+		virtual const std::string& GetName()const override;
 		template <typename T>
 		void Set(const std::string& name, const T& value)
 		{

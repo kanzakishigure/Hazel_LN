@@ -11,6 +11,11 @@ namespace Hazel {
 		m_Shader->SetIntArray(name, count, value);
 	}
 
+	const std::string& OpenGLMaterial::GetName() const
+	{
+		return m_Name;
+	}
+
 	OpenGLMaterial::OpenGLMaterial(const Ref<Shader>& shader, const std::string& name /*= " "*/)
 		:m_Shader(shader),m_Name(name)
 	{

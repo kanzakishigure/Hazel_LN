@@ -55,6 +55,8 @@ namespace Hazel
 
 		const std::vector<Ref<VertexArray>>& GetVertexArray() const { return m_VertexArray; }
 		
+		const std::string& GetLoadPath() const { return m_LoadPath; }
+		
 		//temp function to renderer mesh
 		void GenVertexArry();
 		
@@ -76,6 +78,7 @@ namespace Hazel
 		//用于物理碰撞计算，光线追踪加速
 		BindBox m_BindingBox;
 
+		friend class Entity;
 	};
 	class Mesh
 	{

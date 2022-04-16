@@ -12,7 +12,7 @@ namespace Hazel
 
 	Scene::Scene()
 	{
-		
+	
 
 	}
 
@@ -27,7 +27,7 @@ namespace Hazel
 		//update ScripteableEntity
 		{
 			
-			m_Rehistry.view<NativeScriptComponent>().each([=](auto entity,auto& nsc) {
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity,auto& nsc) {
 				
 				if (!nsc.Instance)
 				{
@@ -45,10 +45,10 @@ namespace Hazel
 
 		Camera* maincamera = nullptr;
 		glm::mat4* Cameratransform = nullptr ;
-		//rendererprep
+		//Renderer preparation
 		{
 			//HazelTools::InstrumentationTimer timer();
-			auto group = m_Rehistry.group<>(entt::get<TransformComponent,CameraComponent>);
+			auto group = m_Registry.group<>(entt::get<TransformComponent,CameraComponent>);
 			for (auto entity : group)
 			{
 				auto [transformCMP, cameraCMP] = group.get(entity);
@@ -62,10 +62,11 @@ namespace Hazel
 		}
 
 		//ScenenRenderer2D
-		if(maincamera!=nullptr)
+#if 1
+	if(maincamera!=nullptr)
 		{
 			Renderer2D::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
-			auto group = m_Rehistry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transformCMP, spriteRendererCMP] = group.get(entity);
@@ -73,19 +74,19 @@ namespace Hazel
 
 			}
 			Renderer2D::EndScene();
-
 		}
+#endif
 #if 1
 	    //Mesh renderer
 		if (maincamera != nullptr)
 		{
 			Renderer::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
 
-			auto group = m_Rehistry.view<TransformComponent,MeshComponent>();
+			auto group = m_Registry.view<TransformComponent,MeshComponent>();
 			for (auto entity: group)
 			{
 				auto [transformCMP, meshCMP] = group.get(entity);
-				Renderer::Submit(meshCMP.MesHSource->GetMaterial(), meshCMP.MesHSource, transformCMP.GetTransform());
+				Renderer::Submit(meshCMP.MeshSource->GetMaterial(), meshCMP.MeshSource, transformCMP.GetTransform());
 			}
 			
 			Renderer::EndScene();
@@ -98,7 +99,11 @@ namespace Hazel
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
-		auto view = m_Rehistry.view<CameraComponent>();
+
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		auto view = m_Registry.view<CameraComponent>();
 		for (auto entity : view)
 		{
 			auto& cameraCMP = view.get<CameraComponent>(entity);
@@ -112,14 +117,52 @@ namespace Hazel
 
 	Entity Scene::CreateEntity(const std::string name)
 	{
-		Entity e = { m_Rehistry.create(),this };
+		Entity e = { m_Registry.create(),this };
 		e.AddComponent<TransformComponent>();
 		auto& tag = e.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity": name;
 		return e;
 	}
 
+	void Scene::DeleteEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
 
+	template<typename T>
+	void Scene::OnComponentAdd(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+	template<>
+	void Scene::OnComponentAdd<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+			component.SceneCamera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+	template<>
+	void Scene::OnComponentAdd<TransformComponent>(Entity entity, TransformComponent& component)
+	{
 
+	}
+	template<>
+	void Scene::OnComponentAdd<MeshComponent>(Entity entity, MeshComponent& component)
+	{
 
+	}
+	template<>
+	void Scene::OnComponentAdd<TagComponent>(Entity entity, TagComponent& component)
+	{
+
+	}
+	template<>
+	void Scene::OnComponentAdd<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+
+	}
+	template<>
+	void Scene::OnComponentAdd<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+
+	}
 }

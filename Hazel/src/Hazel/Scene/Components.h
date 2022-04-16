@@ -96,11 +96,11 @@ namespace Hazel
 		//TODO
 		//use subMeh vector;
 		//MeshSource now have the material ,SubMesh 
-		Ref<MeshSource> MesHSource =nullptr;
+		Ref<Hazel::MeshSource> MeshSource =nullptr;
 		MeshComponent() = default;
 		MeshComponent(const MeshComponent&) = default;
-		MeshComponent(MeshSource* meshsource)
-		:MesHSource(meshsource){}
+		MeshComponent(Hazel::MeshSource* meshsource)
+		:MeshSource(meshsource){}
 		//temp know We Don't have any asset system,should have not instance in the Component 
 		//Ref<Material> MeshMaterial;
 

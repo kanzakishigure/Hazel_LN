@@ -131,7 +131,8 @@ namespace Hazel {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("U_ViewProjection", camera.GetViewProjectionMatrtix());
 		
-		
+		//TODO
+		//when ever entity is delelte we show clean the batch buffer;
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)

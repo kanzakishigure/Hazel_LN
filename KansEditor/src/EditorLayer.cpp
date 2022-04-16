@@ -37,6 +37,8 @@ namespace Hazel
 		{
 			//Create Scene
 			m_ActiveScene = CreateRef<Scene>();
+			//create Entity
+#if 1
 			{
 				auto SunEntity = m_ActiveScene->CreateEntity("Entity A");
 				auto& spritCMP = SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
@@ -47,8 +49,9 @@ namespace Hazel
 				auto& spritCMP  = RedEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 151.0f / 256.0f, 52.0f / 256.0f, 68.0f / 256.0f,1.0f });
 				spritCMP.Texture = Hazel::Texture2D::Create("F:/Kans3D/Hazel/KansEditor/assets/textures/Checkerboard.png");
 			}
+#endif
 			
-			//Create Scene Entity
+			//Create Scene camera
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
 				auto& transfromCMP =  m_CameraEntity.GetComponent<TransformComponent>();
@@ -69,7 +72,7 @@ namespace Hazel
 			{
 				auto hutaoEntity = m_ActiveScene->CreateEntity("HuTao");
 				auto& meshCMP =  hutaoEntity.AddComponent<MeshComponent>();
-				auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht.fbx");
+				auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht/ht.fbx");
 				auto Meshshader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
 				Meshshader->SetShaderBuffer({
 					{ShaderDataType::Mat4,"U_ViewProjection"},
@@ -77,7 +80,7 @@ namespace Hazel
 					});
 				Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
 				MeshSrouce->SetMaterial(StaticMeshShader);
-				meshCMP.MesHSource = MeshSrouce;
+				meshCMP.MeshSource = MeshSrouce;
 				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
 				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
 			}
