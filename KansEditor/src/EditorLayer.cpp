@@ -42,7 +42,7 @@ namespace Hazel
 			{
 				auto SunEntity = m_ActiveScene->CreateEntity("Entity A");
 				auto& spritCMP = SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
-				//spritCMP.Texture = Hazel::Texture2D::Create("assets/textures/hutao.png");
+				//spritCMP.Texture = Hazel::Texture2D::Create("F:/Kans3D/Hazel/KansEditor/assets/textures/Checkerboard.png");
 			}
 			{
 				auto RedEntity = m_ActiveScene->CreateEntity("Entity B");
@@ -197,7 +197,7 @@ namespace Hazel
 	void EditorLayer::OnImGuiRender()
 	{
 		HZ_PROFILE_FUCTION();
-
+		
 //Imgui docking code
 #if 1
 		static bool p_open = true;
@@ -244,13 +244,17 @@ namespace Hazel
 			ImGui::PopStyleVar(2);
 
 		// DockSpace
+		//set the min docking windowsSize tO 340
+		auto& style = ImGui::GetStyle();
+		float minsize = style.WindowMinSize.x;
+		style.WindowMinSize.x = 340;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-
+		style.WindowMinSize.x = minsize;
 
 		if (ImGui::BeginMenuBar())
 		{
@@ -285,6 +289,7 @@ namespace Hazel
 
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	
 	{
 		ImGui::Begin("ProjectSpecication");
 
@@ -343,7 +348,7 @@ namespace Hazel
 			ImGui::End();
 		}
 
-	ImGui::PopStyleVar();
+	ImGui::PopStyleVar(1);
 		
 
 

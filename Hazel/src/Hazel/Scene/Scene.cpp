@@ -1,7 +1,7 @@
 #include "hzpch.h"
 
+#include <glm/glm.hpp>
 #include "Scene.h"
-#include "glm/glm.hpp"
 #include "Entity.h"
 #include "Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
@@ -128,18 +128,23 @@ namespace Hazel
 	{
 		m_Registry.destroy(entity);
 	}
-
+	//To use entt use the call back function we should implement the function advance
 	template<typename T>
 	void Scene::OnComponentAdd(Entity entity, T& component)
 	{
 		static_assert(false);
 	}
+
+
+
+
 	template<>
 	void Scene::OnComponentAdd<CameraComponent>(Entity entity, CameraComponent& component)
 	{
 		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
 			component.SceneCamera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
 	}
+	
 	template<>
 	void Scene::OnComponentAdd<TransformComponent>(Entity entity, TransformComponent& component)
 	{
@@ -165,4 +170,6 @@ namespace Hazel
 	{
 
 	}
+
+
 }

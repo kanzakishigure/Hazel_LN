@@ -97,7 +97,7 @@ namespace Hazel {
 		//此处没有考虑到线程安全性，如果别渲染的线程上仍然有对该资源的引用，那么此处进行的delete操作就会导致该引用指向一个空资源
 
 		//Shader Program
-		s_Data.s_ShaderLibrary.Add(Hazel::Shader::Create("assets/shaders/TextureShader.glsl"));
+		s_Data.s_ShaderLibrary.Add(Hazel::Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/TextureShader.glsl"));
 		
 		s_Data.TextureShader = s_Data.s_ShaderLibrary.Get("TextureShader");
 		
@@ -167,6 +167,8 @@ namespace Hazel {
 
 	void Renderer2D::Flush()
 	{
+		if (s_Data.QuadIndexCount == 0)
+			return; // Nothing to draw
 
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 		{

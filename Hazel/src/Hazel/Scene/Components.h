@@ -73,6 +73,7 @@ namespace Hazel
 				uint32_t data = 0xffffffff;
 				Texture->SetData(&data, sizeof(int));
 			}
+
 		}
 	};
 

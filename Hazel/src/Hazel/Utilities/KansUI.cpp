@@ -1,12 +1,13 @@
 #include "hzpch.h"
 #include "KansUI.h"
-#include "imgui.h"
-#include "imgui_internal.h"
+
 namespace Hazel
 {
 
 	void KansUI::DrawVec3Control(const std::string& label, glm::vec3& value, float resetvalue /*= 0.0f*/, float columwidth /*= 100.0f*/)
 	{
+
+		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		//label
 		ImGui::PushID(label.c_str());
 		ImGui::Columns(2);
@@ -24,8 +25,11 @@ namespace Hazel
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(221 / 256.0f, 15 / 256.0f, 116 / 256.0f, 0.8f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(221 / 256.0f, 15 / 256.0f, 116 / 256.0f, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(197 / 256.0f, 19 / 256.0f, 104 / 256.0f, 1.0f));
+			
+			ImGui::PushFont(boldFont);
 			if (ImGui::Button("X", buttonsize))
 				value.x = resetvalue;
+			ImGui::PopFont();
 
 			ImGui::SameLine();
 			ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -38,8 +42,11 @@ namespace Hazel
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(43 /256.0f, 159 /256.0f, 15 /256.0f,0.8f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(43 / 256.0f, 159 / 256.0f, 15 / 256.0f, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(39 / 256.0f, 108 / 256.0f, 10 / 256.0f, 1.0f));
+			
+			ImGui::PushFont(boldFont);
 			if (ImGui::Button("Y", buttonsize))
 				value.y = resetvalue;
+			ImGui::PopFont();
 
 			ImGui::SameLine();
 			
@@ -54,8 +61,11 @@ namespace Hazel
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(18 / 256.0f, 186 / 256.0f, 190 / 256.0f, 0.8f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(18 / 256.0f, 186 / 256.0f, 190 / 256.0f, 1.0f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(22 / 256.0f, 229 / 256.0f, 228 / 256.0f, 1.0f));
+			
+			ImGui::PushFont(boldFont);
 			if (ImGui::Button("Z", buttonsize))
 				value.z = resetvalue;
+			ImGui::PopFont();
 
 			ImGui::SameLine();
 			ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -68,5 +78,10 @@ namespace Hazel
 		ImGui::Columns(1);
 		ImGui::PopID();
 	}
+
+
+	
+	
+
 
 }
