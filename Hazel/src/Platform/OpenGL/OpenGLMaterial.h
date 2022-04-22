@@ -1,7 +1,8 @@
 #pragma once
+#include <glm/glm.hpp>
 #include "Renderer/Material.h"
 #include "Hazel/Core/StorageBuffer.h"
-#include "glm/glm.hpp"
+#include "Hazel/Renderer/Texture.h"
 namespace Hazel {
 	//参照cherno的vulkan版材质类进行进行改写
 
@@ -21,9 +22,14 @@ namespace Hazel {
 		virtual void Set(const std::string& name, const glm::vec3& value) override;
 		virtual void Set(const std::string& name, const glm::vec4& value) override;
 		virtual void Set(const std::string& name, int value) override;
-
+		virtual void Set(const std::string& name, Ref<Texture2D> value) override;
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) override;
 		virtual const std::string& GetName()const override;
+
+		//set the uniform data
+		virtual void Invalidate()  override;
+
+		//use the uniform buffer we can set the material stats once;
 		template <typename T>
 		void Set(const std::string& name, const T& value)
 		{
@@ -52,5 +58,7 @@ namespace Hazel {
 		Ref<Shader> m_Shader;
 		std::string m_Name;
 		StorageBuffer m_UniformBuffer;
+		//texure 
+		std::map<std::string, Ref<Texture2D>> m_Texture;
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Shader.h"
 #include "Hazel/Core/Base.h"
+#include "Hazel/Renderer/Texture.h"
 namespace Hazel
 {
 	class Material
@@ -10,7 +11,7 @@ namespace Hazel
 		 virtual ~Material() {}
 		 virtual const Ref<Shader> GetShader()const = 0;
 	public:
-		static Ref<Material> Create(const Ref<Shader>& shader,const std::string& name);
+		static Ref<Material> Create(const Ref<Shader>& shader,const std::string& name = "");
 		
 		virtual void Set(const std::string& name, const glm::mat4& value) = 0;
 		virtual void Set(const std::string& name, float value) = 0;
@@ -18,11 +19,11 @@ namespace Hazel
 		virtual void Set(const std::string& name, const glm::vec3& value) = 0;
 		virtual void Set(const std::string& name, const glm::vec4& value) = 0;
 		virtual void Set(const std::string& name, int value) = 0;
+		virtual void Set(const std::string& name, Ref<Texture2D> value) = 0;
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) = 0;
+		virtual const std::string& GetName()const =0;
 
-
-		virtual const std::string& GetName()const =0 ;
-		
+		virtual void Invalidate() = 0;
 		
 	};
 }

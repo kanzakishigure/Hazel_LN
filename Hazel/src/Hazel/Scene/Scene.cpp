@@ -77,16 +77,16 @@ namespace Hazel
 		}
 #endif
 #if 1
-	    //Mesh renderer
+	    //StaticMesh renderer
 		if (maincamera != nullptr)
 		{
 			Renderer::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
 
-			auto group = m_Registry.view<TransformComponent,MeshComponent>();
+			auto group = m_Registry.view<TransformComponent, StaticMeshComponent>();
 			for (auto entity: group)
 			{
 				auto [transformCMP, meshCMP] = group.get(entity);
-				Renderer::Submit(meshCMP.MeshSource->GetMaterial(), meshCMP.MeshSource, transformCMP.GetTransform());
+				Renderer::Submit(meshCMP.StaticMesh ,transformCMP.GetTransform());
 			}
 			
 			Renderer::EndScene();
@@ -151,7 +151,7 @@ namespace Hazel
 
 	}
 	template<>
-	void Scene::OnComponentAdd<MeshComponent>(Entity entity, MeshComponent& component)
+	void Scene::OnComponentAdd<StaticMeshComponent>(Entity entity, StaticMeshComponent& component)
 	{
 
 	}

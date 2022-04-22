@@ -38,7 +38,7 @@ namespace Hazel
 			//Create Scene
 			m_ActiveScene = CreateRef<Scene>();
 			//create Entity
-#if 1
+#if 0
 			{
 				auto SunEntity = m_ActiveScene->CreateEntity("Entity A");
 				auto& spritCMP = SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
@@ -70,19 +70,15 @@ namespace Hazel
 			// createMesh test
 #if 1
 			{
-				auto hutaoEntity = m_ActiveScene->CreateEntity("HuTao");
-				auto& meshCMP =  hutaoEntity.AddComponent<MeshComponent>();
-				auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht/ht.fbx");
-				auto Meshshader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
-				Meshshader->SetShaderBuffer({
-					{ShaderDataType::Mat4,"U_ViewProjection"},
-					{ShaderDataType::Mat4,"U_Transform"}
-					});
-				Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
-				MeshSrouce->SetMaterial(StaticMeshShader);
-				meshCMP.MeshSource = MeshSrouce;
+				auto hutaoEntity = m_ActiveScene->CreateEntity("DBY");
+				auto& meshCMP =  hutaoEntity.AddComponent<StaticMeshComponent>();
+				auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/dby/dby.fbx");
+				meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+				
 				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
+				TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
 				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+				TransformCMP.Scale = { glm::vec3(0.15f) };
 			}
 #endif			
 			//Native Script
@@ -171,7 +167,7 @@ namespace Hazel
 		//renderer
 		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
 		RenderCommand::Clear();
 		
 	

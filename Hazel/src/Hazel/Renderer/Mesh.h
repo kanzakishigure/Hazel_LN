@@ -4,6 +4,7 @@
 #include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Math/BindingBox.h"
 #include "Hazel/Renderer/Material.h"
+#include "Hazel/Renderer/MaterialAsset.h"
 
 
 #include <assimp/Importer.hpp>      // C++ importer interface
@@ -29,8 +30,12 @@ namespace Hazel
 	class SubMesh
 	{
 	public:
-		std::vector <Vertex> Verteices;
-		std::vector <Index> Indices;
+		//we storage the SubMeshed with BaseOffset and count
+		uint32_t BaseVertex;
+		uint32_t BaseIndex;
+		uint32_t VertexCount;
+		uint32_t IndexCount;
+
 		uint32_t MaterialIndex;
 
 		glm::mat4 Transform{ 1.0f }; // World transform
@@ -50,8 +55,10 @@ namespace Hazel
 
 		const std::vector<SubMesh>& GetSubMesh() { return m_SubMeshes; }
 
-		void SetMaterial(const Ref<Material> material) { m_Material = material; }
-		const Ref<Material> GetMaterial() { return m_Material; }
+		void SetMaterial(const std::vector<Ref<Material>>& material) { m_Material = material; }
+		const std::vector<Ref<Material>>& GetMaterial() { return m_Material; }
+		
+		const Ref<Shader>& GetMeshShader() { return m_MeshShader; }
 
 		const std::vector<Ref<VertexArray>>& GetVertexArray() const { return m_VertexArray; }
 		
@@ -64,13 +71,14 @@ namespace Hazel
 	private:
 		Scope<Assimp::Importer> m_Importer;
 
-		
+		std::vector <Vertex> m_Verteices;
+		std::vector <Index> m_Indices;
 		std::vector<SubMesh> m_SubMeshes;
 
 		std::vector<Ref<VertexArray>> m_VertexArray;
-
-		Ref<Material> m_Material;
+		std::vector<Ref<Material>> m_Material;
 		Ref<Shader> m_MeshShader;
+
 		const aiScene* m_Scene;
 		glm::mat4 transform;
 
@@ -80,14 +88,36 @@ namespace Hazel
 
 		friend class Entity;
 	};
-	class Mesh
-	{
-	public:
-		Mesh(const MeshSource& source);
-		~Mesh();
-	private:
-		std::vector<SubMesh> SubMesh;
-	};
+
+		class Mesh
+		{
+		public:
+			Mesh(const MeshSource& source);
+			~Mesh();
+		private:
+			std::vector<uint32_t> m_SubMesh;
+			Ref<MaterialTable> m_MarterialTable;
+			Ref<MeshSource> m_MeshSourcel;
+		};
+		class StaticMesh
+		{
+		public:
+			StaticMesh(Ref<MeshSource> source);
+			~StaticMesh();
+			Ref<MeshSource> GetMeshSource() { return m_MeshSource; }
+			Ref<MeshSource> GetMeshSource() const { return m_MeshSource; }
+			void SetMeshAsset(Ref<MeshSource> meshAsset) { m_MeshSource = meshAsset; }
+
+			Ref<MaterialTable> GetMaterials() const { return m_MarterialTable; }
+
+			void SetSubMesh(const std::vector<uint32_t>& submesh);
+			const std::vector<uint32_t>& GetSubMesh() { return m_SubMesh; }
+		private:
+			std::vector<uint32_t> m_SubMesh;
+			Ref<MaterialTable> m_MarterialTable;
+			Ref<MeshSource> m_MeshSource;
+
+		};
 
 
 

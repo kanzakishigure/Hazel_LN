@@ -25,7 +25,11 @@ layout(location = 0) out vec4 color;
 in vec3 V_Normal;
 in vec2 V_TexCroods;
 in vec4 V_BaseColor;
+uniform sampler2D U_DiffuseTexture;
+uniform sampler2D U_SpecularTexture;
 void main()
 {
-	color = vec4(V_Normal,1.0);
+	color = vec4(texture(U_DiffuseTexture, V_TexCroods).rgb,1.0);
+	color += vec4(texture(U_SpecularTexture, V_TexCroods));
+	
 }

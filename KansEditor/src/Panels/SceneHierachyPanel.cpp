@@ -62,16 +62,9 @@ namespace Hazel
 					}
 					if (ImGui::MenuItem("Mesh Component"))
 					{
-						auto& meshCMP = m_SelectionContext.AddComponent<MeshComponent>();
-						auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht/ht.fbx");
-						auto Meshshader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
-						Meshshader->SetShaderBuffer({
-							{ShaderDataType::Mat4,"U_ViewProjection"},
-							{ShaderDataType::Mat4,"U_Transform"}
-							});
-						Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
-						MeshSrouce->SetMaterial(StaticMeshShader);
-						meshCMP.MeshSource = MeshSrouce;
+						auto& meshCMP = m_SelectionContext.AddComponent<StaticMeshComponent>();
+						auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht/ht.fbx");
+						meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
 					}
 					if (ImGui::MenuItem("Camera Component"))
 					{
@@ -270,11 +263,9 @@ namespace Hazel
 			ImGui::Separator();
 			ImGui::Text("Texture path is : %s", component.Texture->GetPath().c_str());
 		});
-		KansUI::DrawComponent<MeshComponent>("Mesh", entity, [](MeshComponent& component) {
+		KansUI::DrawComponent<StaticMeshComponent>("Mesh", entity, [](StaticMeshComponent& component) {
 			ImGui::Separator();
-			ImGui::Text("Mesh load path is: %s", component.MeshSource->GetLoadPath().c_str());
-			ImGui::Separator();
-			ImGui::Text("Mesh Material is: %s", component.MeshSource->GetMaterial()->GetName().c_str());
+			ImGui::Text("Mesh load path is: %s", component.StaticMesh->GetMeshSource()->GetLoadPath().c_str());
 			});
 
 	}

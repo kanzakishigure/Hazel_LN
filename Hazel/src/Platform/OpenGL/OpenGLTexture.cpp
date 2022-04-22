@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ #include "hzpch.h"
 #include "OpenGLTexture.h"
 #include "stb_image.h"
 
@@ -77,7 +77,6 @@ namespace Hazel {
 	void OpenGLTexture2D::Bind(uint32_t slogt) const
 	{
 		HZ_PROFILE_FUCTION();
-
 		glBindTextureUnit(slogt, m_RendererID);
 	}
 

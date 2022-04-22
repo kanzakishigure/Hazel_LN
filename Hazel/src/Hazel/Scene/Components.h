@@ -92,16 +92,16 @@ namespace Hazel
 		}
 	};
 
-	struct MeshComponent
+	struct StaticMeshComponent
 	{
 		//TODO
 		//use subMeh vector;
 		//MeshSource now have the material ,SubMesh 
-		Ref<Hazel::MeshSource> MeshSource =nullptr;
-		MeshComponent() = default;
-		MeshComponent(const MeshComponent&) = default;
-		MeshComponent(Hazel::MeshSource* meshsource)
-		:MeshSource(meshsource){}
+		
+		Ref<StaticMesh> StaticMesh;
+
+		StaticMeshComponent() = default;
+		StaticMeshComponent(const StaticMeshComponent&) = default;
 		//temp know We Don't have any asset system,should have not instance in the Component 
 		//Ref<Material> MeshMaterial;
 

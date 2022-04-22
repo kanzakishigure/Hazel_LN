@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazel/Core/Base.h"
 #include "Hazel/Core/Log.h"
+#include <glm/glm.hpp>
 namespace Hazel
 {
 	struct StorageBuffer

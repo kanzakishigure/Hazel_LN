@@ -28,6 +28,16 @@ namespace Hazel {
 	}
 
 
+	ShaderLibrary::ShaderLibrary()
+	{
+
+	}
+
+	ShaderLibrary::~ShaderLibrary()
+	{
+
+	}
+
 	void ShaderLibrary::Add(Ref<Shader>& shader)
 	{
 		auto name = shader->GetName();
