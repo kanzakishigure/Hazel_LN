@@ -1,4 +1,7 @@
-# Kans3D is a engine based on Hazel-2d
+# Kans3D 
+
+## Kans3D is a engine based on Hazel-2d
+
 **Now Kans3D have these features**
 
 + Material system
