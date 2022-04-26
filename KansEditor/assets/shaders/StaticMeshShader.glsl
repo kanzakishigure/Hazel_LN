@@ -1,6 +1,5 @@
 #type vertex
 #version 330 core
-
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec2 a_TextureCroods;
@@ -10,26 +9,117 @@ uniform mat4 U_Transform;
 out vec3 V_Normal;
 out vec2 V_TexCroods;
 out vec4 V_BaseColor;
+out vec3 V_FragPos;
 void main()
 {
+	// gl_Position is in the screen space
 	gl_Position = U_ViewProjection*U_Transform*vec4(a_Position, 1.0);
+
 	V_TexCroods = a_TextureCroods;
 	V_BaseColor = a_BaseColor;
-	V_Normal = a_Normal;
+
+	//the V_Normal is in worldspcae
+	V_Normal = mat3(transpose(inverse(U_Transform)))*a_Normal;
+	//Get the position in worldspcae
+	V_FragPos = mat3(U_Transform)*a_Position;
 }
 
 #type fragment
 #version 330 core
 layout(location = 0) out vec4 color;
 
-in vec3 V_Normal;
+#define PI 3.1415926
+
+struct Material
+{
+	sampler2D U_DiffuseTexture;
+	sampler2D U_SpecularTexture;
+	sampler2D U_NormalTexture;
+	sampler2D U_EmissionTexture;
+	float U_Shininess;
+};
+
+struct DirLight
+{
+	vec3 LightDir;
+	vec3 Diffuse_Intensity;
+	vec3 Specular_Intensity;
+	vec3 Ambient_Intensity;
+};
+struct PointLight
+{
+	vec3 Position;
+	vec3 Diffuse_Intensity;
+	vec3 Specular_Intensity;
+	vec3 Ambient_Intensity;
+};
+
+//shading point Material
+uniform Material material;
+//scene info 
+uniform DirLight dirLight;
+uniform PointLight pointLight;
+//geometry attribute
 in vec2 V_TexCroods;
 in vec4 V_BaseColor;
-uniform sampler2D U_DiffuseTexture;
-uniform sampler2D U_SpecularTexture;
+
+//World space attribute
+in vec3 V_FragPos;
+in vec3 V_Normal;
+
+//camera attribute
+uniform vec3 U_ViewPos;
+
+vec3 CalcDirLight(DirLight dirLight,vec3 norm,vec3 viewdir)
+{
+
+	vec3 lightDir = normalize(-dirLight.LightDir);
+	//difusseShadingCoefficient
+	float diff = max(dot(norm, lightDir), 0.0);
+	//SpecularShadingCoefficient
+	vec3 reflectDir = reflect(-lightDir, norm);
+	float spec = pow(max(dot(reflectDir,viewdir),0.0),material.U_Shininess);
+	//Ambient
+	vec3 ambient  = dirLight.Ambient_Intensity*texture2D(material.U_DiffuseTexture,V_TexCroods).rgb;
+	//Difusse
+	vec3 diffuse  = diff*dirLight.Diffuse_Intensity*texture2D(material.U_DiffuseTexture,V_TexCroods).rgb;
+	//Specular
+	vec3 specular = spec*dirLight.Specular_Intensity*texture2D(material.U_SpecularTexture,V_TexCroods).rgb;
+	return (ambient + diffuse + specular);
+}
+vec3 CalcPointLight(PointLight pointLight,vec3 norm,vec3 fragPos,vec3 viewDir)
+{
+	vec3 lightDir = normalize(pointLight.Position - fragPos);
+    // diffuse shading
+    float diff = max(dot(norm, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.U_Shininess);
+    // attenuation
+    float distance = length(pointLight.Position - fragPos);
+    float attenuation = 1.0 /(4*PI*distance*distance);    
+    // combine results
+    vec3 ambient = pointLight.Ambient_Intensity * texture2D(material.U_DiffuseTexture,V_TexCroods).rgb;
+    vec3 diffuse = pointLight.Ambient_Intensity * diff * texture2D(material.U_DiffuseTexture,V_TexCroods).rgb;
+    vec3 specular = pointLight.Specular_Intensity * spec * texture2D(material.U_SpecularTexture,V_TexCroods).rgb;
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
+    return (ambient + diffuse + specular);
+}
 void main()
 {
-	color = vec4(texture(U_DiffuseTexture, V_TexCroods).rgb,1.0);
-	color += vec4(texture(U_SpecularTexture, V_TexCroods));
-	
+	// properties
+    vec3 norm = normalize(V_Normal);
+    vec3 viewDir = normalize(U_ViewPos - V_FragPos);
+
+	vec3 result = vec3(0.0);
+	//CalcDirLight
+	result += CalcDirLight(dirLight,norm,viewDir);
+	//CalcPointLight
+	result += CalcPointLight(pointLight,norm,V_FragPos,viewDir);
+
+	color = vec4(result,1.0);
+	//Transform to light space
+	//color = vec4(color.r*0.299+color.g*0.731+color.b*0.121);
 }

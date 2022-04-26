@@ -35,10 +35,19 @@ namespace Hazel {
 			s_RendererData->m_ShaderLibrary = CreateRef<ShaderLibrary>();
 			auto StaticShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
 			StaticShader->SetShaderBuffer({
-					{ShaderDataType::Float3,"U_Diffuse"},
-					{ShaderDataType::Float3,"U_Specular"},
-					{ShaderDataType::Float3,"U_Emission"},
-					{ShaderDataType::Float,"U_Shininess"},
+					{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
+					{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
+					{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
+					{ShaderDataType::Float, MaterialAsset::GetShininessLocation()},
+					{ShaderDataType::Float3,"dirLight.LightDir"},
+					{ShaderDataType::Float3,"dirLight.Ambient_Intensity"},
+					{ShaderDataType::Float3,"dirLight.Diffuse_Intensity"},
+					{ShaderDataType::Float3,"dirLight.Specular_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Position"},
+					{ShaderDataType::Float3,"pointLight.Ambient_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Diffuse_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Specular_Intensity"},
+					{ShaderDataType::Float3,"U_ViewPos"}					
 				});
 			s_RendererData->m_ShaderLibrary->Add(StaticShader);
 		}
@@ -51,8 +60,6 @@ namespace Hazel {
 		s_RendererData->ViewProjectionMatix = camera.GetProjectMatrix()*glm::inverse(transform);
 		//准备camera，texture,材质，光照等等所有所需的信息
 	}
-
-
 	void Renderer::EndScene()
 	{
 
@@ -65,25 +72,6 @@ namespace Hazel {
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("U_Transform", transform);
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
-	}
-
-	void Renderer::Submit(const Ref<StaticMesh> mesh, const glm::mat4& transform)
-	{
-		auto& VAOs = mesh->GetMeshSource()->GetVertexArray();
-		auto& shader = mesh->GetMeshSource()->GetMeshShader();
-		shader->Bind();
-		Ref<MaterialTable>& materialTable = mesh->GetMaterials();
-		
-		shader->SetMat4("U_ViewProjection", s_RendererData->ViewProjectionMatix);
-		shader->SetMat4("U_Transform", transform);
-		for (auto& mesh : mesh->GetSubMesh())
-		{
-			auto VA = VAOs[mesh];
-			VA->Bind();
-			auto subMtl =  materialTable->GetMaterialAsset(mesh)->GetMaterial();
-			subMtl->Invalidate();
-			RenderCommand::DrawIndexed(VA);
-		}
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

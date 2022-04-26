@@ -19,6 +19,7 @@ namespace Hazel {
 		ShaderLibrary shaderLibrary;
 		OrthographicCameraController m_CameraController;
 		
+		Ref<SceneRenderer> m_StaticMeshRenderer;
 		Ref<FrameBuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = glm::vec2(0.0f,0.0f);
 

@@ -267,6 +267,19 @@ namespace Hazel
 			ImGui::Separator();
 			ImGui::Text("Mesh load path is: %s", component.StaticMesh->GetMeshSource()->GetLoadPath().c_str());
 			});
+		KansUI::DrawComponent<DirLightComponent>("DirLight", entity, [](DirLightComponent& component) {
+			ImGui::Separator();
+			KansUI::DrawVec3Control("Direction", component.Direction);
+			ImGui::ColorEdit3("Diffuse_Intensity",glm::value_ptr(component.Diffuse_Intensity));
+			ImGui::ColorEdit3("Specular_Intensity", glm::value_ptr(component.Specular_Intensity));
+			ImGui::ColorEdit3("Ambient_Intensity", glm::value_ptr(component.Ambient_Intensity));
+			});
+		KansUI::DrawComponent<PointLightComponent>("PointLight", entity, [](PointLightComponent& component) {
+			ImGui::Separator();
+			ImGui::ColorEdit3("Diffuse_Intensity", glm::value_ptr(component.Diffuse_Intensity));
+			ImGui::ColorEdit3("Specular_Intensity", glm::value_ptr(component.Specular_Intensity));
+			ImGui::ColorEdit3("Ambient_Intensity", glm::value_ptr(component.Ambient_Intensity));
+			});
 
 	}
 	

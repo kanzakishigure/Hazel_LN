@@ -24,6 +24,7 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUCTION();
 		
+
 		//FrameBuffer init
 		{
 			FrameBufferSpecification spec;
@@ -36,7 +37,14 @@ namespace Hazel
 		// scene init
 		{
 			//Create Scene
-			m_ActiveScene = CreateRef<Scene>();
+			{
+				m_ActiveScene = CreateRef<Scene>();
+				auto pointlight = m_ActiveScene->CreateEntity("PointLight");
+				pointlight.AddComponent<PointLightComponent>();
+
+				auto DirLight = m_ActiveScene->CreateEntity("DirLight");
+				DirLight.AddComponent<DirLightComponent>();
+			}
 			//create Entity
 #if 0
 			{
@@ -50,7 +58,10 @@ namespace Hazel
 				spritCMP.Texture = Hazel::Texture2D::Create("F:/Kans3D/Hazel/KansEditor/assets/textures/Checkerboard.png");
 			}
 #endif
-			
+			//Scene Renderer Init
+			{
+				m_StaticMeshRenderer = CreateRef<SceneRenderer>(m_ActiveScene);
+			}
 			//Create Scene camera
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
@@ -170,15 +181,17 @@ namespace Hazel
 		RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
 		RenderCommand::Clear();
 		
-	
+		//updateScene
+		{
+			m_ActiveScene->OnUpdate(ts);
+		}
 
 		//rendering
 		{
 			HZ_PROFILE_SCOPE("rendering")
 
-			//updateScene
-			m_ActiveScene->OnUpdate(ts);
 
+			m_ActiveScene->OnRenderer(m_StaticMeshRenderer,ts);
 			m_Framebuffer->Unbind();
 
 		}

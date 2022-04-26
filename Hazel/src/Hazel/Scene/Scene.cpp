@@ -4,16 +4,17 @@
 #include "Scene.h"
 #include "Entity.h"
 #include "Components.h"
-#include "Hazel/Renderer/Renderer2D.h"
-#include "Hazel/Renderer/Renderer.h"
 
+#include "Hazel/Renderer/Renderer.h"
+#include "Hazel/Renderer/Renderer2D.h"
+#include "Hazel/Renderer/SceneRenderer.h"
 namespace Hazel
 {	
 
-	Scene::Scene()
+	Scene::Scene()	
 	{
 	
-
+		
 	}
 
 	Scene::~Scene()
@@ -43,29 +44,55 @@ namespace Hazel
 		
 		}
 
-		Camera* maincamera = nullptr;
-		glm::mat4* Cameratransform = nullptr ;
+		
+	}	
+
+	void Scene::OnRenderer(Ref<SceneRenderer> renderer,TimeStep ts)
+	{
+		Entity cameraEntity = GetCameraEntity();
+		if (!cameraEntity)
+			return;
+		//SceneInfo
+		SceneInfo sceneinfo = {};
+
+		CameraComponent& cameraCMP = cameraEntity.GetComponent<CameraComponent>();
+		sceneinfo.sceneCamera.camera = cameraCMP.SceneCamera;
+		glm::mat4 Cameratransform = cameraEntity.GetComponent<TransformComponent>().GetTransform();
+		glm::vec3 camaerapos = cameraEntity.GetComponent<TransformComponent>().Position;
 		//Renderer preparation
 		{
-			//HazelTools::InstrumentationTimer timer();
-			auto group = m_Registry.group<>(entt::get<TransformComponent,CameraComponent>);
-			for (auto entity : group)
+			//viePosition;
+			sceneinfo.sceneCamera.Position = camaerapos;
+			sceneinfo.sceneCamera.viewMatrix = glm::inverse(Cameratransform);
+			//dirLight
 			{
-				auto [transformCMP, cameraCMP] = group.get(entity);
-				if (cameraCMP.Primary)
+				auto view = m_Registry.view<DirLightComponent>();
+				for (auto entity : view)
 				{
-					maincamera = &cameraCMP.SceneCamera;
-					Cameratransform = &transformCMP.GetTransform();
+					auto [dirlightCMP] = view.get(entity);
+					sceneinfo.dirLight.Dirction = dirlightCMP.Direction;
+					sceneinfo.dirLight.Ambient_Intensity = dirlightCMP.Ambient_Intensity;
+					sceneinfo.dirLight.Diffuse_Intensity = dirlightCMP.Diffuse_Intensity;
+					sceneinfo.dirLight.Specular_Intensity = dirlightCMP.Specular_Intensity;
 				}
-				
+			}
+			//spotLight
+			{
+				auto view = m_Registry.view<PointLightComponent,TransformComponent>();
+				for (auto entity : view)
+				{
+					auto [pointlightCMP,transformCMP] = view.get(entity);
+					sceneinfo.pointLight.Position = transformCMP.Position;
+					sceneinfo.pointLight.Ambient_Intensity = pointlightCMP.Ambient_Intensity;
+					sceneinfo.pointLight.Diffuse_Intensity = pointlightCMP.Diffuse_Intensity;
+					sceneinfo.pointLight.Specular_Intensity = pointlightCMP.Specular_Intensity;
+				}
 			}
 		}
-
 		//ScenenRenderer2D
 #if 1
-	if(maincamera!=nullptr)
 		{
-			Renderer2D::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
+			Renderer2D::BeginScene(sceneinfo.sceneCamera.camera.GetProjectMatrix(), Cameratransform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
@@ -77,25 +104,23 @@ namespace Hazel
 		}
 #endif
 #if 1
-	    //StaticMesh renderer
-		if (maincamera != nullptr)
+		//StaticMesh renderer
 		{
-			Renderer::BeginScene(maincamera->GetProjectMatrix(), *Cameratransform);
-
+			renderer->BeginScene(sceneinfo);
 			auto group = m_Registry.view<TransformComponent, StaticMeshComponent>();
-			for (auto entity: group)
+			for (auto entity : group)
 			{
 				auto [transformCMP, meshCMP] = group.get(entity);
-				Renderer::Submit(meshCMP.StaticMesh ,transformCMP.GetTransform());
+				renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.StaticMesh->GetMaterials(), transformCMP.GetTransform());
 			}
-			
-			Renderer::EndScene();
+
+			renderer->EndScene();
 		}
 #endif		
-		
-	}	
 
-	
+	}
+
+		
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
@@ -128,6 +153,22 @@ namespace Hazel
 	{
 		m_Registry.destroy(entity);
 	}
+
+	Hazel::Entity Scene::GetCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto [cameraCMP] = view.get(entity);
+			if (cameraCMP.Primary)
+			{
+				return {entity ,this};
+			}
+
+		}
+		return {};
+	}
+
 	//To use entt use the call back function we should implement the function advance
 	template<typename T>
 	void Scene::OnComponentAdd(Entity entity, T& component)
@@ -170,6 +211,15 @@ namespace Hazel
 	{
 
 	}
+	template<>
+	void Scene::OnComponentAdd<DirLightComponent>(Entity entity, DirLightComponent& component)
+	{
 
+	}
+	template<>
+	void Scene::OnComponentAdd<PointLightComponent>(Entity entity, PointLightComponent& component)
+	{
+
+	}
 
 }

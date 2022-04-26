@@ -128,12 +128,12 @@ namespace Hazel
 						HZ_TRACE("{0} DIFFUSE texture: {1} ", m_LoadPath.c_str(), aistr.C_Str());
 						std::string texturepath = m_LoadPath +"/"+ aistr.C_Str();
 						auto texture = Texture2D::Create(texturepath);
-						mtl->Set("U_DiffuseTexture", texture);
+						mtl->Set(MaterialAsset::GetDiffuseMapLocation(), texture);
 					}
 					else
 					{
 						HZ_WARN("{0} don't have DIFFUSE texture", m_LoadPath.c_str());
-						mtl->Set("U_DiffuseTexture", Renderer::GetBlackTexture());
+						mtl->Set(MaterialAsset::GetDiffuseMapLocation(), Renderer::GetBlackTexture());
 					}
 				}
 				//SPECULAR
@@ -147,12 +147,12 @@ namespace Hazel
 						HZ_TRACE("{0} SPECULAR texture: {1} ", m_LoadPath.c_str(), aistr.C_Str());
 						std::string texturepath = m_LoadPath + "/" + aistr.C_Str();
 						auto texture = Texture2D::Create(texturepath);
-						mtl->Set("U_SpecularTexture", texture);
+						mtl->Set(MaterialAsset::GetSpecularMapLocation(), texture);
 					}
 					else
 					{
 						HZ_WARN("{0} don't have Specular texture", m_LoadPath.c_str());
-						mtl->Set("U_SpecularTexture", Renderer::GetBlackTexture());
+						mtl->Set(MaterialAsset::GetSpecularMapLocation(), Renderer::GetBlackTexture());
 					}
 				}
 				//Normal
@@ -176,7 +176,7 @@ namespace Hazel
 					float shininess;
 					if (aimaterial->Get(AI_MATKEY_SHININESS, shininess) != aiReturn_SUCCESS)
 						shininess = 80.0f; // Default value
-					mtl->Set("U_Shininess", shininess);
+					mtl->Set(MaterialAsset::GetShininessLocation(), shininess);
 				}
 			}
 			//PBR material
