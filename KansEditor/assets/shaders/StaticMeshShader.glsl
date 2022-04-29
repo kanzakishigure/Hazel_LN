@@ -19,6 +19,7 @@ void main()
 	V_BaseColor = a_BaseColor;
 
 	//the V_Normal is in worldspcae
+	//（Moldle-1）T
 	V_Normal = mat3(transpose(inverse(U_Transform)))*a_Normal;
 	//Get the position in worldspcae
 	V_FragPos = mat3(U_Transform)*a_Position;
@@ -27,7 +28,7 @@ void main()
 #type fragment
 #version 330 core
 layout(location = 0) out vec4 color;
-
+layout(location = 1) out vec4 bright;
 #define PI 3.1415926
 
 struct Material
@@ -120,6 +121,7 @@ void main()
 	result += CalcPointLight(pointLight,norm,V_FragPos,viewDir);
 
 	color = vec4(result,1.0);
+	bright = vec4(result.r*0.2126+result.g*0.7152+result.b*0.0722);
 	//Transform to light space
 	//color = vec4(color.r*0.299+color.g*0.731+color.b*0.121);
 }

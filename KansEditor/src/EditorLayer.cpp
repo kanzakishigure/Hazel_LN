@@ -30,6 +30,7 @@ namespace Hazel
 			FrameBufferSpecification spec;
 			spec.Width = Application::Get().GetWindow().GetWidth();
 			spec.Height = Application::Get().GetWindow().GetHeight();
+			spec.AttachmentSpecification = { FrameBufferTextureFormat::RGBA8 ,FrameBufferTextureFormat::RGBA8,FrameBufferTextureFormat::Depth };
 			m_Framebuffer = FrameBuffer::Create(spec);
 
 		}
@@ -85,7 +86,7 @@ namespace Hazel
 				auto& meshCMP =  hutaoEntity.AddComponent<StaticMeshComponent>();
 				auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/dby/dby.fbx");
 				meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
-				
+				meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
 				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
 				TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
 				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
@@ -338,7 +339,7 @@ namespace Hazel
 		}
 
 		//Depth FrameBuffer
-		if(0)
+		if(1)
 		{
 			ImGui::Begin("ViewPort2");
 			ImVec2 viewportsize = ImGui::GetContentRegionAvail();
@@ -351,7 +352,7 @@ namespace Hazel
 			}
 
 
-			uint64_t depthframebufferID =(uint64_t)m_Framebuffer->GetDepthAttachmentRendererID();
+			uint64_t depthframebufferID =(uint64_t)m_Framebuffer->GetColorAttachmentRendererID(1);
 			ImGui::Image((void*)depthframebufferID, viewportsize, ImVec2(0, 1), ImVec2(1, 0));
 
 			ImGui::End();

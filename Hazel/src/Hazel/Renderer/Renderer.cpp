@@ -50,6 +50,13 @@ namespace Hazel {
 					{ShaderDataType::Float3,"U_ViewPos"}					
 				});
 			s_RendererData->m_ShaderLibrary->Add(StaticShader);
+			auto StencilShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StencilShader.glsl");
+			StencilShader->SetShaderBuffer({});
+			s_RendererData->m_ShaderLibrary->Add(StencilShader);
+
+			auto PostShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/PostShader.glsl");
+			PostShader->SetShaderBuffer({});
+			s_RendererData->m_ShaderLibrary->Add(PostShader);
 		}
 
 	}

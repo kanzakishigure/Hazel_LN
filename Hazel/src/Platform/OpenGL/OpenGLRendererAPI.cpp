@@ -4,14 +4,50 @@
 #include <glad/glad.h>
 namespace Hazel {
 
+	namespace Utils
+	{
+		static void CreateTexture()
+		{
+
+		}
+		static uint32_t To_OpenGLStencilOp(StencilOption value)
+		{
+			switch (value)
+			{
+				case Hazel::StencilOption::KEEP:     return GL_KEEP;
+				case Hazel::StencilOption::ZERO:     return GL_ZERO;
+				case Hazel::StencilOption::REPLACE:	 return GL_REPLACE;
+				case Hazel::StencilOption::INCR:	 return GL_INCR;
+				case Hazel::StencilOption::INCR_WRAP:return GL_INCR_WRAP;
+				case Hazel::StencilOption::DECR:	 return GL_DECR;
+				case Hazel::StencilOption::DECR_WRAP:return GL_DECR_WRAP;
+				case Hazel::StencilOption::INVERT:	 return GL_INVERT;
+
+			}
+		}
+	}
+
+	
 	void OpenGLRendererAPI::Init()
 	{
 		HZ_PROFILE_FUCTION();
 		//对于其他渲染级别的性能检测，不使用HZ_PROFILE_FUNCTION这个级别的检测，因为每次渲染执行的时候都会进行大量的复杂操作，在执行每次命令的时候，会消耗大量的时间，以及内存开销
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//深度测试
 		glEnable(GL_DEPTH_TEST);
-		
+		//模板缓冲
+		glEnable(GL_STENCIL_TEST);
+		//三角面剔除
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CCW);
+		{
+			//don't update depth buffer
+			//glDepthMask(GL_FALSE);
+			glDepthFunc(GL_LESS);
+			glStencilMask(0x00);
+		}
 
 	}
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
@@ -21,7 +57,8 @@ namespace Hazel {
 
 	void OpenGLRendererAPI::Clear()
 	{
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+		
 
 	}
 
@@ -38,4 +75,32 @@ namespace Hazel {
 		glViewport(x, y, width, height);
 	}
 
+	void OpenGLRendererAPI::SetStencilMask(uint32_t mask)
+	{
+		glStencilMask(mask);
+	}
+
+	void OpenGLRendererAPI::SetStencilFunc(StencilFunction func, uint32_t value, uint32_t mask)
+	{
+		GLenum glfunc=GL_NEVER + (uint32_t)func;
+		
+		glStencilFunc(glfunc, value, mask);
+	}
+
+	void OpenGLRendererAPI::StencilOp(StencilOption sfail, StencilOption dpfail, StencilOption dppass)
+	{
+		glStencilOp(Utils::To_OpenGLStencilOp(sfail), Utils::To_OpenGLStencilOp(dpfail), Utils::To_OpenGLStencilOp(dppass));
+	}
+
+	void OpenGLRendererAPI::EnableDepthTest(bool enabled)
+	{
+		enabled ? glEnable(GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::EnableSetStencil(bool enabled)
+	{
+		enabled ? glEnable(GL_STENCIL_TEST): glDisable(GL_STENCIL_TEST);
+	}
+	
+		
 }

@@ -110,13 +110,32 @@ namespace Hazel
 			auto group = m_Registry.view<TransformComponent, StaticMeshComponent>();
 			for (auto entity : group)
 			{
+				RenderCommand::EnableSetStencil(true);
+				RenderCommand::StencilOp(StencilOption::KEEP, StencilOption::KEEP, StencilOption::REPLACE);
+				RenderCommand::SetStencilFunc(StencilFunction::ALWAYS, 1, 0xff);	
+				RenderCommand::SetStencilMask(0xff);
 				auto [transformCMP, meshCMP] = group.get(entity);
-				renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.StaticMesh->GetMaterials(), transformCMP.GetTransform());
-			}
+				renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform());
+				
+				
+				RenderCommand::SetStencilFunc(StencilFunction::NOTEQUAL, 1, 0xff);
+				RenderCommand::SetStencilMask(0x00);
+				TransformComponent ts = transformCMP;
+				ts.Scale *= 1.007f;
+				renderer->SubmitStaticMeshStencil(meshCMP.StaticMesh, ts.GetTransform());
+				RenderCommand::SetStencilMask(0xff);
+				RenderCommand::EnableSetStencil(false);
+				
 
+				//renderer->SubmitMeshPost()
+			}
 			renderer->EndScene();
 		}
-#endif		
+#endif	
+		// Post effect
+		{
+			
+		}	
 
 	}
 

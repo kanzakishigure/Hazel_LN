@@ -99,6 +99,7 @@ namespace Hazel
 		//MeshSource now have the material ,SubMesh 
 		
 		Ref<StaticMesh> StaticMesh;
+		Ref<MaterialTable>  MaterialTable;
 
 		StaticMeshComponent() = default;
 		StaticMeshComponent(const StaticMeshComponent&) = default;

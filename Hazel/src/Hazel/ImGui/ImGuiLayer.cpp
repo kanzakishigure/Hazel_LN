@@ -44,8 +44,8 @@ namespace Hazel
 		//Set the default font
 		{
 			//io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 18.0f);
-			io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto/Roboto-Regular.ttf", 16.0f);
-			io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto/Roboto-Bold.ttf", 16.0f);
+			io.FontDefault = io.Fonts->AddFontFromFileTTF("F:/Kans3D/Hazel/KansEditor/assets/fonts/Roboto/Roboto-Regular.ttf", 16.0f);
+			io.Fonts->AddFontFromFileTTF("F:/Kans3D/Hazel/KansEditor/assets/fonts/Roboto/Roboto-Bold.ttf", 16.0f);
 		}
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();

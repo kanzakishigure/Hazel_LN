@@ -26,6 +26,26 @@ namespace Hazel {
 		{
 			s_RnedererAPI->SetViewPort(x, y, width, height);
 		}
+		inline static void EnableSetStencil(bool enabled)
+		{
+			s_RnedererAPI->EnableSetStencil(enabled);
+		}
+		inline static void EnableDepthTest(bool enabled)
+		{
+			s_RnedererAPI->EnableDepthTest(enabled);
+		}
+		inline static void SetStencilFunc(StencilFunction func, uint32_t value, uint32_t mask)
+		{
+			s_RnedererAPI->SetStencilFunc(func,value,mask);
+		}
+		inline static void SetStencilMask(uint32_t mask) 
+		{
+			s_RnedererAPI->SetStencilMask(mask);
+		}
+		inline static void StencilOp(StencilOption sfail, StencilOption dpfail, StencilOption dppass)
+		{
+			s_RnedererAPI->StencilOp(sfail, dpfail, dppass);
+		}
 	private:
 		 static RendererAPI* s_RnedererAPI;
 	};

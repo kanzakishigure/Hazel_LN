@@ -17,24 +17,30 @@ namespace Hazel
 		PointLight pointLight;
 		SceneRendererCamera sceneCamera;
 	};
-	
+	struct SceneRendererSpecification
+	{
+		bool SwapChainTarget = false;
+	};
 	class Scene;
 	class SceneRenderer 
 	{
 		public:
-			SceneRenderer(Ref<Scene> scene);
+			SceneRenderer(Ref<Scene> scene, SceneRendererSpecification spec = SceneRendererSpecification());
 			~SceneRenderer(){};
 
 			void Init();
 			void BeginScene(SceneInfo info);
 			void EndScene();
-			void SetScene(Ref<Scene> scene) { m_Scene = scene; }
+			void SetScene(Ref<Scene> scene);
 			void SubmitStaticMesh(Ref<StaticMesh> mesh,Ref<MaterialTable> material,glm::mat4 transform);
+			void SubmitStaticMeshStencil(Ref<StaticMesh> mesh, glm::mat4 transform);
+			void SubmitStaticMeshPostEffect(Ref<StaticMesh> mesh,Ref<Texture2D> attachment, glm::mat4 transform);
 			
 		private:
 			//SceneRenderer did't handle the life of Scnene;
 			Ref<Scene> m_Scene;
 			SceneInfo m_SceneInfo;
+			SceneRendererSpecification m_Specification;
 			bool m_Active = false;
 	};
 }

@@ -9,7 +9,7 @@ namespace Hazel {
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::NONE:    HZ_CORE_ASSERT(false, "RendererAPI::NONE is not support"); return nullptr;
-			case RendererAPI::API::OPENGL:  return std::make_shared<OpenGLFrameBuffer>(spec);
+			case RendererAPI::API::OPENGL:  return CreateRef<OpenGLFrameBuffer>(spec);
 		}
 		HZ_CORE_ASSERT(false, "unknow RendererAPI");
 		return nullptr;

@@ -4,8 +4,8 @@
 namespace Hazel 
 {
 
-	SceneRenderer::SceneRenderer(Ref<Scene> scene)
-		:m_Scene(scene)
+	SceneRenderer::SceneRenderer(Ref<Scene> scene, SceneRendererSpecification spec)
+		:m_Scene(scene),m_Specification(spec)
 	{
 		Init();
 	}
@@ -25,6 +25,12 @@ namespace Hazel
 	void SceneRenderer::EndScene()
 	{
 		m_Active = false;
+	}
+
+	void SceneRenderer::SetScene(Ref<Scene> scene)
+	{
+		HZ_ASSERT(scene, "Handel a nullptr scene");
+		m_Scene = scene;
 	}
 
 	void SceneRenderer::SubmitStaticMesh(Ref<StaticMesh> mesh, Ref<MaterialTable> material, glm::mat4 transform)
@@ -63,6 +69,40 @@ namespace Hazel
 
 
 			subMtl->Invalidate();
+			RenderCommand::DrawIndexed(VA);
+		}
+	}
+
+	void SceneRenderer::SubmitStaticMeshStencil(Ref<StaticMesh> mesh, glm::mat4 transform)
+	{
+		auto& VAOs = mesh->GetMeshSource()->GetVertexArray();
+		auto& shader = Renderer::GetShaderLibrary()->Get("StencilShader");
+		shader->Bind();
+		glm::mat4 viewprojection = m_SceneInfo.sceneCamera.camera.GetProjectMatrix() * m_SceneInfo.sceneCamera.viewMatrix;
+		shader->SetMat4("U_ViewProjection", viewprojection);
+		shader->SetMat4("U_Transform", transform);
+
+		for (auto& mesh : mesh->GetSubMesh())
+		{
+			auto VA = VAOs[mesh];
+			VA->Bind();
+			RenderCommand::DrawIndexed(VA);
+		}
+	}
+
+	void SceneRenderer::SubmitStaticMeshPostEffect(Ref<StaticMesh> mesh, Ref<Texture2D> attachment, glm::mat4 transform)
+	{
+		auto& VAOs = mesh->GetMeshSource()->GetVertexArray();
+		auto& shader = Renderer::GetShaderLibrary()->Get("PostShader");
+		shader->Bind();
+		glm::mat4 viewprojection = m_SceneInfo.sceneCamera.camera.GetProjectMatrix() * m_SceneInfo.sceneCamera.viewMatrix;
+		shader->SetMat4("U_ViewProjection", viewprojection);
+		shader->SetMat4("U_Transform", transform);
+		attachment->Bind();
+		for (auto& mesh : mesh->GetSubMesh())
+		{
+			auto VA = VAOs[mesh];
+			VA->Bind();
 			RenderCommand::DrawIndexed(VA);
 		}
 	}
