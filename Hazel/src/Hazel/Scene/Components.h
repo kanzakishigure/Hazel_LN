@@ -124,4 +124,14 @@ namespace Hazel
 		PointLightComponent() = default;
 		PointLightComponent(const PointLightComponent&) = default;
 	};
+	struct MaterialComponent
+	{
+		MaterialComponent() = default;
+		MaterialComponent(const MaterialComponent&) = default;
+		float BoundSharp =1.95f;
+		float DividLineH = 0.8f;
+		float DividLineM = 0.35f;
+		float DividLineL = 0.25f;
+		glm::vec4 DarkColor;
+	};
 }

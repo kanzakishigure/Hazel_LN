@@ -18,7 +18,9 @@ namespace Hazel
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override;
 		virtual uint32_t GetDepthAttachmentRendererID() const override { return m_DepthAttachment; }
 
-		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual void Resize(uint32_t width, uint32_t height) override;\
+	public:
+		virtual void SwapColorAttachment(uint32_t index, uint32_t attachment) const override;
 	private:
 		FrameBufferSpecification m_Specification;
 		uint32_t m_RendererID = 0;;

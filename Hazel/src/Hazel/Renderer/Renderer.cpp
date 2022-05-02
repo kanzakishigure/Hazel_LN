@@ -57,6 +57,27 @@ namespace Hazel {
 			auto PostShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/PostShader.glsl");
 			PostShader->SetShaderBuffer({});
 			s_RendererData->m_ShaderLibrary->Add(PostShader);
+
+			auto OutLineShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/OutLineShader.glsl");
+			OutLineShader->SetShaderBuffer({});
+			s_RendererData->m_ShaderLibrary->Add(OutLineShader);
+
+			auto ToneShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/ToneShader.glsl");
+			ToneShader->SetShaderBuffer({ 
+					{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
+					{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
+					{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
+					{ShaderDataType::Float, MaterialAsset::GetShininessLocation()},
+					{ShaderDataType::Float3,"dirLight.LightDir"},
+					{ShaderDataType::Float3,"dirLight.Ambient_Intensity"},
+					{ShaderDataType::Float3,"dirLight.Diffuse_Intensity"},
+					{ShaderDataType::Float3,"dirLight.Specular_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Position"},
+					{ShaderDataType::Float3,"pointLight.Ambient_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Diffuse_Intensity"},
+					{ShaderDataType::Float3,"pointLight.Specular_Intensity"},
+					{ShaderDataType::Float3,"U_ViewPos"} });
+			s_RendererData->m_ShaderLibrary->Add(ToneShader);
 		}
 
 	}
@@ -65,7 +86,7 @@ namespace Hazel {
 	{
 		
 		s_RendererData->ViewProjectionMatix = camera.GetProjectMatrix()*glm::inverse(transform);
-		//准备camera，texture,材质，光照等等所有所需的信息
+		
 	}
 	void Renderer::EndScene()
 	{

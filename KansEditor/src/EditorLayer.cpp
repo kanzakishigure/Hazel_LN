@@ -30,6 +30,7 @@ namespace Hazel
 			FrameBufferSpecification spec;
 			spec.Width = Application::Get().GetWindow().GetWidth();
 			spec.Height = Application::Get().GetWindow().GetHeight();
+											//Color                           normal													Depth
 			spec.AttachmentSpecification = { FrameBufferTextureFormat::RGBA8 ,FrameBufferTextureFormat::RGBA8,FrameBufferTextureFormat::Depth };
 			m_Framebuffer = FrameBuffer::Create(spec);
 
@@ -41,8 +42,10 @@ namespace Hazel
 			{
 				m_ActiveScene = CreateRef<Scene>();
 				auto pointlight = m_ActiveScene->CreateEntity("PointLight");
-				pointlight.AddComponent<PointLightComponent>();
 
+				pointlight.AddComponent<PointLightComponent>();
+				auto& CMP = pointlight.GetComponent<TransformComponent>();
+				CMP.Position = { 2.0,4.0,1.70 };
 				auto DirLight = m_ActiveScene->CreateEntity("DirLight");
 				DirLight.AddComponent<DirLightComponent>();
 			}
@@ -62,12 +65,13 @@ namespace Hazel
 			//Scene Renderer Init
 			{
 				m_StaticMeshRenderer = CreateRef<SceneRenderer>(m_ActiveScene);
+				m_StaticMeshRenderer->SetFrameBuffer(m_Framebuffer);
 			}
 			//Create Scene camera
 			{
 				m_CameraEntity = m_ActiveScene->CreateEntity("mainCamera");
 				auto& transfromCMP =  m_CameraEntity.GetComponent<TransformComponent>();
-				transfromCMP.Position = { 0.0f,0.0f,5.0f };
+				transfromCMP.Position = { 0.0f,0.7f,1.5f };
 				auto& cmp = m_CameraEntity.AddComponent<CameraComponent>();
 				cmp.SceneCamera.SetViewportSize(1920, 1080);
 			}
@@ -82,17 +86,48 @@ namespace Hazel
 			// createMesh test
 #if 1
 			{
-				auto hutaoEntity = m_ActiveScene->CreateEntity("DBY");
-				auto& meshCMP =  hutaoEntity.AddComponent<StaticMeshComponent>();
-				auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/dby/dby.fbx");
-				meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
-				meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
-				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
-				TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
-				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
-				TransformCMP.Scale = { glm::vec3(0.15f) };
+				if(0)
+				{
+					auto DBYEntity = m_ActiveScene->CreateEntity("DBY");
+					auto& meshCMP = DBYEntity.AddComponent<StaticMeshComponent>();
+					DBYEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/dby/dby.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = DBYEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+				{
+					auto GYEntity = m_ActiveScene->CreateEntity("GY");
+					auto& meshCMP = GYEntity.AddComponent<StaticMeshComponent>();
+					GYEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/GY/GY.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = GYEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+#endif
+#if 0
+				{
+					auto nanosuitEntity = m_ActiveScene->CreateEntity("nanosuit");
+					auto& meshCMP = nanosuitEntity.AddComponent<StaticMeshComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/nanosuit/nanosuit.obj");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = nanosuitEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+				
+#endif // DEBUG
 			}
-#endif			
+		
 			//Native Script
 			{
 				class CameracontorlScript : public ScriptableEntity
@@ -179,7 +214,7 @@ namespace Hazel
 		//renderer
 		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
-		RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
+		RenderCommand::SetClearColor({ 0.02f, 0.02f, 0.02f, 1.0f });
 		RenderCommand::Clear();
 		
 		//updateScene

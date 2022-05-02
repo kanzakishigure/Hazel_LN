@@ -14,10 +14,14 @@ namespace Hazel {
 
 		virtual void EnableDepthTest(bool enabled) override;
 		virtual void EnableSetStencil(bool enabled) override;
-		
+		virtual void EnableCullFace(bool enabled) override;
+
 		virtual void SetStencilMask(uint32_t mask) override;
 		virtual void SetStencilFunc(StencilFunction func, uint32_t value, uint32_t mask) override;
 		virtual void StencilOp(StencilOption sfail, StencilOption dpfail, StencilOption dppass) override;
+		virtual void CullFace(CullFaceOption option) override;
+
+		virtual void BindTexture(uint32_t texture, uint32_t slot) override;
 	};
 
 

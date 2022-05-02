@@ -199,4 +199,15 @@ namespace Hazel {
 		Invalidata();
 	}
 
+	void OpenGLFrameBuffer::SwapColorAttachment(uint32_t index, uint32_t attachment) const
+	{
+		
+		HZ_ASSERT(index < m_ColorAttachments.size(), "index out of the range");
+		
+		//We can't swapAttachment now
+		
+		//glDeleteTextures(1, &m_ColorAttachments[index]);
+		//m_ColorAttachments.insert(m_ColorAttachments.begin()+index,attachment);
+	}
+
 }

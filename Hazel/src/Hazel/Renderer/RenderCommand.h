@@ -46,6 +46,18 @@ namespace Hazel {
 		{
 			s_RnedererAPI->StencilOp(sfail, dpfail, dppass);
 		}
+		inline static void EnableCullFace(bool enabled)
+		{
+			s_RnedererAPI->EnableCullFace(enabled);
+		}
+		inline static void CullFace(CullFaceOption option)
+		{
+			s_RnedererAPI->CullFace(option);
+		}
+		inline static void BindTexture(uint32_t texture, uint32_t slot)
+		{
+			s_RnedererAPI->BindTexture(texture,slot);
+		}
 	private:
 		 static RendererAPI* s_RnedererAPI;
 	};

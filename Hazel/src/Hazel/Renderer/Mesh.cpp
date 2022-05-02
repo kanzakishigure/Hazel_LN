@@ -75,6 +75,9 @@ namespace Hazel
 			v.Normal =	 { mesh->mNormals[i].x,
 						   mesh->mNormals[i].y,
 						   mesh->mNormals[i].z };
+			v.Tangent = { mesh->mTangents[i].x,
+						   mesh->mTangents[i].y,
+						   mesh->mTangents[i].z };
 			if (mesh->mTextureCoords[0]) // 网格是否有纹理坐标？
 			{
 				v.Texturecroods = { mesh->mTextureCoords[0][i].x,
@@ -117,6 +120,7 @@ namespace Hazel
 			auto mtl = Material::Create(m_MeshShader, mtlName);
 			//BlingPhong material
 			{
+				
 				//DIFFUSE;
 				{
 					int materialcount = 0;
@@ -139,7 +143,7 @@ namespace Hazel
 				//SPECULAR
 				{
 					int materialcount = 0;
-					materialcount = aimaterial->GetTextureCount(aiTextureType_SPECULAR);
+					materialcount = aimaterial->GetTextureCount(aiTextureType_SPECULAR);					
 					if (materialcount)
 					{
 						aiString aistr = {};
@@ -156,20 +160,27 @@ namespace Hazel
 					}
 				}
 				//Normal
-				if(0)
 				{
 					int materialcount = 0;
-					materialcount = aimaterial->GetTextureCount(aiTextureType_NORMALS);
+					materialcount = aimaterial->GetTextureCount(aiTextureType_SPECULAR);
 					if (materialcount)
 					{
-						aiString aistr;
-						aimaterial->GetTexture(aiTextureType_NORMALS, 0, &aistr);
-						HZ_INFO("{0} Normal texture: {1} ", m_LoadPath.c_str(), aistr.C_Str());
-						std::string texturepath = m_LoadPath + "/" + aistr.C_Str();				
-						auto texture = Texture2D::Create(texturepath);
-						mtl->Set("U_NormalTexture", texture);
+						int materialcount = 0;
+						materialcount = aimaterial->GetTextureCount(aiTextureType_NORMALS);
+						if (materialcount)
+						{
+							aiString aistr;
+							aimaterial->GetTexture(aiTextureType_NORMALS, 0, &aistr);
+							HZ_INFO("{0} Normal texture: {1} ", m_LoadPath.c_str(), aistr.C_Str());
+							std::string texturepath = m_LoadPath + "/" + aistr.C_Str();
+							auto texture = Texture2D::Create(texturepath);
+							mtl->Set("U_NormalTexture", texture);
+						}
 					}
-					
+					else
+					{
+						HZ_WARN("{0} don't have Normal texture", m_LoadPath.c_str());
+					}
 				}
 				//shininess
 				{
@@ -200,7 +211,8 @@ namespace Hazel
 			{ShaderDataType::Float3,"a_Position"},
 			{ShaderDataType::Float3,"a_Normal"},
 			{ShaderDataType::Float2,"a_TextureCroods"},
-			{ShaderDataType::Float4,"a_BaseColor"}
+			{ShaderDataType::Float4,"a_BaseColor"},
+			{ShaderDataType::Float3,"a_Tangent"},
 		};
 
 		for (auto submesh : m_SubMeshes)

@@ -21,6 +21,8 @@ namespace Hazel
 		glm::vec3 Normal;
 		glm::vec2 Texturecroods;
 		glm::vec4 BaseColor;
+		glm::vec3 Tangent;
+
 	};
 	struct Index
 	{

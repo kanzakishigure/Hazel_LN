@@ -88,8 +88,9 @@ namespace Hazel
 					sceneinfo.pointLight.Specular_Intensity = pointlightCMP.Specular_Intensity;
 				}
 			}
+			
 		}
-		//ScenenRenderer2D
+		//Renderer2D
 #if 1
 		{
 			Renderer2D::BeginScene(sceneinfo.sceneCamera.camera.GetProjectMatrix(), Cameratransform);
@@ -115,18 +116,45 @@ namespace Hazel
 				RenderCommand::SetStencilFunc(StencilFunction::ALWAYS, 1, 0xff);	
 				RenderCommand::SetStencilMask(0xff);
 				auto [transformCMP, meshCMP] = group.get(entity);
-				renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform());
-				
-				
-				RenderCommand::SetStencilFunc(StencilFunction::NOTEQUAL, 1, 0xff);
-				RenderCommand::SetStencilMask(0x00);
-				TransformComponent ts = transformCMP;
-				ts.Scale *= 1.007f;
-				renderer->SubmitStaticMeshStencil(meshCMP.StaticMesh, ts.GetTransform());
-				RenderCommand::SetStencilMask(0xff);
-				RenderCommand::EnableSetStencil(false);
-				
+				//renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform());
+				//ToneShader
+				if(1)
+				{
+					Entity e = { entity,this };
+					auto materialCMP = e.GetComponent<MaterialComponent>();
+					ToneShaderData data;
+					data.BoundSharp = materialCMP.BoundSharp;
+					data.DarkColor = materialCMP.DarkColor;
+					data.DividLineH = materialCMP.DividLineH;
+					data.DividLineM = materialCMP.DividLineM;
+					data.DividLineL = materialCMP.DividLineL;
+					renderer->SubmitStaticMeshToneshading(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform(), data);
+				}
 
+
+
+				//Outline
+				if(0)
+				{
+					RenderCommand::SetStencilFunc(StencilFunction::NOTEQUAL, 1, 0xff);
+					RenderCommand::SetStencilMask(0x00);
+					TransformComponent ts = transformCMP;
+					ts.Scale *= 1.007f;
+					renderer->SubmitStaticMeshStencil(meshCMP.StaticMesh, ts.GetTransform());
+					RenderCommand::SetStencilMask(0xff);
+					RenderCommand::EnableSetStencil(false);
+				}
+				
+				// Stroke
+				if(0)
+				{
+					RenderCommand::EnableCullFace(true);
+					RenderCommand::CullFace(CullFaceOption::FRONT);
+					renderer->SubmitStaticMeshOutLine(meshCMP.StaticMesh, transformCMP.GetTransform());
+					RenderCommand::CullFace(CullFaceOption::BACK);
+					RenderCommand::EnableCullFace(false);
+				}
+				
 				//renderer->SubmitMeshPost()
 			}
 			renderer->EndScene();
@@ -240,5 +268,9 @@ namespace Hazel
 	{
 
 	}
+	template<>
+	void Scene::OnComponentAdd<MaterialComponent>(Entity entity, MaterialComponent& component)
+	{
 
+	}
 }

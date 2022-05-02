@@ -280,7 +280,14 @@ namespace Hazel
 			ImGui::ColorEdit3("Specular_Intensity", glm::value_ptr(component.Specular_Intensity));
 			ImGui::ColorEdit3("Ambient_Intensity", glm::value_ptr(component.Ambient_Intensity));
 			});
-
+		KansUI::DrawComponent<MaterialComponent>("Material", entity, [](MaterialComponent& component) {
+			ImGui::Separator();
+			ImGui::DragFloat("BoundSharp", &component.BoundSharp, 0.05);
+			ImGui::DragFloat("DividLineH", &component.DividLineH, 0.05);
+			ImGui::DragFloat("DividLineM", &component.DividLineM, 0.05);
+			ImGui::DragFloat("DividLineL", &component.DividLineL, 0.05);
+			ImGui::ColorEdit4("darkColor",glm::value_ptr(component.DarkColor));
+			});
 	}
 	
 

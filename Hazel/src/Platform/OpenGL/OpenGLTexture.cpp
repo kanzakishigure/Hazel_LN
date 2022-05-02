@@ -74,10 +74,10 @@ namespace Hazel {
 		glDeleteTextures(1,&m_RendererID);
 	}
 
-	void OpenGLTexture2D::Bind(uint32_t slogt) const
+	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
 		HZ_PROFILE_FUCTION();
-		glBindTextureUnit(slogt, m_RendererID);
+		glBindTextureUnit(slot, m_RendererID);
 	}
 
 

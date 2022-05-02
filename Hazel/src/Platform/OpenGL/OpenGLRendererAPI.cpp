@@ -6,10 +6,7 @@ namespace Hazel {
 
 	namespace Utils
 	{
-		static void CreateTexture()
-		{
-
-		}
+		
 		static uint32_t To_OpenGLStencilOp(StencilOption value)
 		{
 			switch (value)
@@ -22,6 +19,16 @@ namespace Hazel {
 				case Hazel::StencilOption::DECR:	 return GL_DECR;
 				case Hazel::StencilOption::DECR_WRAP:return GL_DECR_WRAP;
 				case Hazel::StencilOption::INVERT:	 return GL_INVERT;
+
+			}
+		}
+		static uint32_t To_OpenGLCullFaceOption(CullFaceOption value)
+		{
+			switch (value)
+			{
+			case Hazel::CullFaceOption::BACK: return GL_BACK;
+			case Hazel::CullFaceOption::FRONT:return GL_FRONT;
+			case Hazel::CullFaceOption::FRONT_AND_BACK:return GL_FRONT_AND_BACK;
 
 			}
 		}
@@ -92,6 +99,11 @@ namespace Hazel {
 		glStencilOp(Utils::To_OpenGLStencilOp(sfail), Utils::To_OpenGLStencilOp(dpfail), Utils::To_OpenGLStencilOp(dppass));
 	}
 
+	void OpenGLRendererAPI::BindTexture(uint32_t texture, uint32_t slot)
+	{
+		glBindTextureUnit(slot, texture);
+	}
+
 	void OpenGLRendererAPI::EnableDepthTest(bool enabled)
 	{
 		enabled ? glEnable(GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST);
@@ -103,4 +115,12 @@ namespace Hazel {
 	}
 	
 		
+	void OpenGLRendererAPI::EnableCullFace(bool enabled)
+	{
+		enabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+	}
+	void OpenGLRendererAPI::CullFace(CullFaceOption option)
+	{
+		glCullFace(Utils::To_OpenGLCullFaceOption(option));
+	}
 }

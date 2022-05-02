@@ -23,6 +23,11 @@ namespace Hazel {
 		DECR_WRAP,
 		INVERT
 	};
+	enum class CullFaceOption {
+		BACK,
+		FRONT,
+		FRONT_AND_BACK
+	};
 	class RendererAPI
 	{
 	public:
@@ -42,9 +47,15 @@ namespace Hazel {
 	
 		virtual void EnableDepthTest(bool enabled)=0;
 		virtual void EnableSetStencil(bool enabled) =0;
+		virtual void EnableCullFace(bool enabled) = 0;
+
 		virtual void SetStencilMask(uint32_t mask) =0;
 		virtual void SetStencilFunc(StencilFunction func, uint32_t value, uint32_t mask) = 0;
 		virtual void StencilOp(StencilOption sfail, StencilOption dpfail, StencilOption dppass) = 0;
+		virtual void CullFace(CullFaceOption option) =0;
+
+		//Temp function
+		virtual void BindTexture(uint32_t texture, uint32_t slot) = 0;
 	private:
 		static API s_API;
 
