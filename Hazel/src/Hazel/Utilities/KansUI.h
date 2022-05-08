@@ -8,9 +8,11 @@ namespace Hazel
 	class KansUI
 	{
 	public:
+		 static void DrawVec4Control(const std::string& label, glm::vec4& value, float resetvalue = 0.0f, float columwidth = 100.0f);
 		 static void DrawVec3Control(const std::string& label, glm::vec3& value, float resetvalue = 0.0f, float columwidth = 100.0f);
-
-
+		 static void DrawVec2Control(const std::string& label, glm::vec2& value, float resetvalue = 0.0f, float columwidth = 100.0f);
+		 static void DrawFloatControl(const std::string& label,float& value, float resetvalue = 0.0f, float columwidth = 100.0f);
+		 static void DrawIntControl(const std::string& label, int& value, float resetvalue = 0.0f, float columwidth = 100.0f);
 	public:
 		 template <typename T, typename UIfunc>
 		 static void DrawComponent(const std::string& label, Entity entity, UIfunc uifunc)

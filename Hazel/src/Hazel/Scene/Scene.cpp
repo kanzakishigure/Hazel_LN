@@ -118,19 +118,16 @@ namespace Hazel
 				auto [transformCMP, meshCMP] = group.get(entity);
 				//renderer->SubmitStaticMesh(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform());
 				//ToneShader
+				//RenderCommand::EnableCullFace(false);
 				if(1)
 				{
 					Entity e = { entity,this };
-					auto materialCMP = e.GetComponent<MaterialComponent>();
-					ToneShaderData data;
-					data.BoundSharp = materialCMP.BoundSharp;
-					data.DarkColor = materialCMP.DarkColor;
-					data.DividLineH = materialCMP.DividLineH;
-					data.DividLineM = materialCMP.DividLineM;
-					data.DividLineL = materialCMP.DividLineL;
-					renderer->SubmitStaticMeshToneshading(meshCMP.StaticMesh, meshCMP.MaterialTable, transformCMP.GetTransform(), data);
+					auto& materialCMP = e.GetComponent<MaterialComponent>();
+					//renderer->SubmitStaticMeshToneshading(meshCMP.StaticMesh, transformCMP.GetTransform(), data);
+					//renderer->SubmitStaticMeshDebug(meshCMP.StaticMesh, transformCMP.GetTransform());
+					renderer->SubmitToneCharactorShader(meshCMP.StaticMesh, transformCMP.GetTransform());
 				}
-
+				//RenderCommand::EnableCullFace(true);
 
 
 				//Outline
@@ -143,6 +140,7 @@ namespace Hazel
 					renderer->SubmitStaticMeshStencil(meshCMP.StaticMesh, ts.GetTransform());
 					RenderCommand::SetStencilMask(0xff);
 					RenderCommand::EnableSetStencil(false);
+
 				}
 				
 				// Stroke
@@ -153,6 +151,11 @@ namespace Hazel
 					renderer->SubmitStaticMeshOutLine(meshCMP.StaticMesh, transformCMP.GetTransform());
 					RenderCommand::CullFace(CullFaceOption::BACK);
 					RenderCommand::EnableCullFace(false);
+				}
+				//DebugNormalShader
+				if(0)
+				{
+					renderer->SubmitStaticMeshDebugNormal(meshCMP.StaticMesh, transformCMP.GetTransform());
 				}
 				
 				//renderer->SubmitMeshPost()

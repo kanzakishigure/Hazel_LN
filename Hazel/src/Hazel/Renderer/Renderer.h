@@ -34,6 +34,7 @@ namespace Hazel {
 			Ref<Texture2D> WhiteTexture;
 			Ref<Texture2D> BlackTexture;
 			Ref<ShaderLibrary> m_ShaderLibrary;
+
 		};
 
 		static RendererData* s_RendererData;

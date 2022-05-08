@@ -30,8 +30,17 @@ namespace Hazel {
 			}
 			else
 			{
+				switch (format)
+				{
+				case GL_RGBA8:
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+					break;
+				case GL_RGBA16F:
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+					break;
+				}
 				// create a Render object for depth and stencil attachment (we don't be sampling these)
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width,height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+				
 
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -134,6 +143,8 @@ namespace Hazel {
 				switch (m_ColorAttachmentSpecifications[i].TextureFormat)
 				{
 				case FrameBufferTextureFormat::RGBA8: Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA8, m_Specification.Width, m_Specification.Height, i);
+					break;
+				case FrameBufferTextureFormat::RGBA16F: Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA16F, m_Specification.Width, m_Specification.Height, i);
 					break;
 				}
 			}

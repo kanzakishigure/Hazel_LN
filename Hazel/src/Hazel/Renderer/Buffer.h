@@ -3,7 +3,12 @@ namespace Hazel {
 
 	enum class ShaderDataType
 	{
-		NONE = 0, Float, Float2, Float3,Float4,Mat3,Mat4,Int,Int2, Int3, Int4,Bool
+		NONE = 0, 
+		Float, Float2, Float3,Float4,
+		Mat3,Mat4,
+		Int,Int2, Int3, Int4,
+		Bool, 
+		Color4, Color3
 
 	};
 	static uint32_t ShaderTypeSize(ShaderDataType type)
@@ -20,6 +25,8 @@ namespace Hazel {
 			case ShaderDataType::Int2:		return 4 * 2;
 			case ShaderDataType::Int3:		return 4 * 3;
 			case ShaderDataType::Int4:		return 4 * 4;
+			case ShaderDataType::Color4:     return 4 * 4;
+			case ShaderDataType::Color3:     return 4 * 3;
 			case ShaderDataType::Bool:		return 1;
 		}
 		

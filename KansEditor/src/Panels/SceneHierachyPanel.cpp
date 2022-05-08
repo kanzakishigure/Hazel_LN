@@ -263,10 +263,7 @@ namespace Hazel
 			ImGui::Separator();
 			ImGui::Text("Texture path is : %s", component.Texture->GetPath().c_str());
 		});
-		KansUI::DrawComponent<StaticMeshComponent>("Mesh", entity, [](StaticMeshComponent& component) {
-			ImGui::Separator();
-			ImGui::Text("Mesh load path is: %s", component.StaticMesh->GetMeshSource()->GetLoadPath().c_str());
-			});
+		
 		KansUI::DrawComponent<DirLightComponent>("DirLight", entity, [](DirLightComponent& component) {
 			ImGui::Separator();
 			KansUI::DrawVec3Control("Direction", component.Direction);
@@ -280,13 +277,84 @@ namespace Hazel
 			ImGui::ColorEdit3("Specular_Intensity", glm::value_ptr(component.Specular_Intensity));
 			ImGui::ColorEdit3("Ambient_Intensity", glm::value_ptr(component.Ambient_Intensity));
 			});
+		KansUI::DrawComponent<StaticMeshComponent>("Mesh", entity, [](StaticMeshComponent& component) {
+			ImGui::Separator();
+			ImGui::Text("Mesh load path is: %s", component.StaticMesh->GetMeshSource()->GetLoadPath().c_str());
+			});
 		KansUI::DrawComponent<MaterialComponent>("Material", entity, [](MaterialComponent& component) {
 			ImGui::Separator();
-			ImGui::DragFloat("BoundSharp", &component.BoundSharp, 0.05);
-			ImGui::DragFloat("DividLineH", &component.DividLineH, 0.05);
-			ImGui::DragFloat("DividLineM", &component.DividLineM, 0.05);
-			ImGui::DragFloat("DividLineL", &component.DividLineL, 0.05);
-			ImGui::ColorEdit4("darkColor",glm::value_ptr(component.DarkColor));
+			
+			auto materialCount = component.MaterialTable->GetMaterialCount();
+			for (uint32_t i = 0; i < materialCount; i++)
+			{
+				auto& material = component.MaterialTable->GetMaterialAsset(i)->GetMaterial();
+				auto& materialBuffer = material->GetShaderBuffer();
+				for (auto& UniformMap : materialBuffer.ShaderUniforms)
+				{
+					ImGui::Text("material :%s", material->GetName().c_str());
+					const std::string& uniformName = UniformMap.first;
+					auto& uniform = UniformMap.second;
+					ImGui::Separator();
+					switch (uniform.GetType())
+					{
+					case ShaderDataType::Float: 
+					{
+						float value = 0.0f;
+						value = material->GetFloat(uniformName);
+						std::string label = material->GetName() + "   " + uniformName;
+						KansUI::DrawFloatControl(label, value);
+						material->Set(uniformName, value);
+					}
+						break;
+					case ShaderDataType::Float2:
+					{
+						glm::vec2 value = glm::vec2(1.0);
+						value = material->GetVec2(uniformName);
+						std::string label = material->GetName() + "   " + uniformName;
+						KansUI::DrawVec2Control(label, value);
+						material->Set(uniformName, value);
+					}
+						break;
+					case ShaderDataType::Float3:
+					{
+						glm::vec3 value = glm::vec3(1.0);
+						value = material->GetVec3(uniformName);
+						std::string label = material->GetName() + "   " + uniformName;
+						KansUI::DrawVec3Control(label, value);
+						material->Set(uniformName, value);
+					}
+						break;
+					case ShaderDataType::Float4:
+					{
+						glm::vec4 value = glm::vec4(1.0);
+						value = material->GetVec4(uniformName);
+						std::string label = material->GetName() + "   " + uniformName;
+						KansUI::DrawVec4Control(label, value);
+						material->Set(uniformName, value);
+					}
+						break;
+					case ShaderDataType::Color4:
+					{
+						glm::vec4 value = glm::vec4(1.0);
+						value = material->GetVec4(uniformName);
+						std::string label = material->GetName() +"   "+ uniformName;
+						ImGui::ColorEdit4(label.c_str(), glm::value_ptr(value));
+						material->Set(uniformName, value);
+					}
+						break;
+					case ShaderDataType::Color3:
+					{
+						glm::vec3 value = glm::vec3(1.0);
+						value = material->GetVec4(uniformName);
+						std::string label = material->GetName() + "   " + uniformName;
+						ImGui::ColorEdit3(label.c_str(), glm::value_ptr(value));
+						material->Set(uniformName, value);
+					}
+					break;
+
+					}
+				}
+			}
 			});
 	}
 	

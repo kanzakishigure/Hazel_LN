@@ -30,6 +30,11 @@ namespace Hazel
 		static const std::string s_EmissionMapUnifrom = MaterialName + "U_EmissionTexture";
 		//·¨Ïß
 		static const std::string s_NormalMapUnifrom =   MaterialName + "U_NormalTexture";
+
+
+	//ToneShader
+		static const std::string s_ToneLightMapUnifrom = MaterialName + "U_ToneLightMap";
+		static const std::string s_ToneRampMapUnifrom = MaterialName + "U_ToneRampMap";
 	//PBR Material		  
 
 	class MaterialAsset
@@ -44,11 +49,14 @@ namespace Hazel
 		static const std::string& GetSpecularMapLocation() { return s_SpecularMapUniform; }
 		static const std::string& GetEmissionMapLocation() { return s_EmissionMapUnifrom; }
 		static const std::string& GetNormalMapLocation() { return s_NormalMapUnifrom; }
+		static const std::string& GetToneLightMapLocation() { return s_ToneLightMapUnifrom; }
+		static const std::string& GetToneRampMapLocation() { return s_ToneRampMapUnifrom; }
 
 		static const std::string& GetDiffuseLocation() { return s_DiffuseUniform; }
 		static const std::string& GetSpecularLocation() { return s_SpecularUniform; }
 		static const std::string& GetEmissionLocation() { return s_EmissionUniform; }
 		static const std::string& GetShininessLocation() { return s_ShininessUniform; }
+	
 		//BlingPhong
 		 //Set value
 		void SetDiffuse(const glm::vec3& value);
@@ -78,6 +86,8 @@ namespace Hazel
 		const Ref<MaterialAsset>& GetMaterialAsset(uint32_t index);
 		void CleanMaterial(uint32_t index);
 		void Clean();
+	public:
+		const uint32_t GetMaterialCount() { return m_MaterialCount; }
 	private:
 		uint32_t m_MaterialCount;
 		std::map<uint32_t, Ref<MaterialAsset>> m_MaterialTable;

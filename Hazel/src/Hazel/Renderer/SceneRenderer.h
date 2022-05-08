@@ -18,14 +18,6 @@ namespace Hazel
 		PointLight pointLight;
 		SceneRendererCamera sceneCamera;
 	};
-	struct ToneShaderData
-	{
-		float BoundSharp = 1.95f;
-		float DividLineH = 0.8f;
-		float DividLineM = 0.35f;
-		float DividLineL = 0.25f;
-		glm::vec4 DarkColor;
-	};
 	struct SceneRendererSpecification
 	{
 		bool SwapChainTarget = false;
@@ -45,10 +37,17 @@ namespace Hazel
 			void SubmitStaticMeshStencil(Ref<StaticMesh> mesh, glm::mat4 transform);
 			void SubmitStaticMeshPostEffect(Ref<StaticMesh> mesh,Ref<Texture2D> attachment, glm::mat4 transform);
 			void SubmitStaticMeshOutLine(Ref<StaticMesh> mesh, glm::mat4 transform);
-			void SubmitStaticMeshToneshading(Ref<StaticMesh> mesh, Ref<MaterialTable> material, glm::mat4 transform, ToneShaderData data);
+			void SubmitStaticMeshToneshading(Ref<StaticMesh> mesh, glm::mat4 transform);
+
+
+
 			//temp method
 			void SetFrameBuffer(Ref<FrameBuffer> framebuffer) { m_FrameBuffer = framebuffer; }
 			const Ref<FrameBuffer>& GetFrameBuffer()const { return m_FrameBuffer; }
+		public:
+			void SubmitStaticMeshDebugNormal(Ref<StaticMesh> mesh, glm::mat4 transform);
+			void SubmitStaticMeshDebug(Ref<StaticMesh> mesh, glm::mat4 transform);
+			void SubmitToneCharactorShader(Ref<StaticMesh> mesh, glm::mat4 transform);
 		private:
 			//SceneRenderer did't handle the life of Scnene;
 			Ref<Scene> m_Scene;

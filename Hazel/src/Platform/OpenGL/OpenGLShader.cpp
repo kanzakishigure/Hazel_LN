@@ -14,6 +14,8 @@ namespace Hazel {
 			return GL_VERTEX_SHADER;
 		if (type == "fragment") 
 			return GL_FRAGMENT_SHADER;
+		if (type == "geometry")
+			return GL_GEOMETRY_SHADER;
 		HZ_CORE_ASSERT(false, "Unknow shadertype");
 		return 0;
 	}
@@ -114,11 +116,12 @@ namespace Hazel {
 
 		//shaderComplie
 		uint32_t id = glCreateProgram();
-		HZ_CORE_ASSERT(shadersource.size() <= 2, "shadersource is not support !");
-		std::array<GLenum,2> glShaderIDs;
+		HZ_CORE_ASSERT(shadersource.size() <= 3, "shadersource is not support !");
+		std::array<GLenum,3> glShaderIDs;
 		uint32_t index=0;
 		GLenum test1 = GL_FRAGMENT_SHADER;
 		GLenum test2 = GL_VERTEX_SHADER;
+		int test3 = GL_GEOMETRY_SHADER;
 		for each (auto & kv in shadersource)
 		{
 			GLenum type = kv.first;
@@ -210,7 +213,9 @@ namespace Hazel {
 	void OpenGLShader::UploadUniform4Float(const std::string& name, const glm::vec4& value) const
 	{
 		uint32_t location = glGetUniformLocation(m_RendererID, name.c_str());
-		glUniform4f(location, value.x, value.y, value.z, value.w);
+		glUniform4fv(location,1, glm::value_ptr(value));
+		//glUniform4f(location, value.x, value.y, value.z,value.w);
+
 	}
 
 	void OpenGLShader::UploadUniform3Float(const std::string& name, const glm::vec3& value) const
@@ -275,7 +280,7 @@ namespace Hazel {
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
 	{
-		HZ_PROFILE_FUCTION();
+		//HZ_PROFILE_FUCTION();
 		UploadUniform4Float(name, value);
 	}
 

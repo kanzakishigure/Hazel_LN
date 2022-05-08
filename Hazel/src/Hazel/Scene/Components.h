@@ -128,10 +128,7 @@ namespace Hazel
 	{
 		MaterialComponent() = default;
 		MaterialComponent(const MaterialComponent&) = default;
-		float BoundSharp =1.95f;
-		float DividLineH = 0.8f;
-		float DividLineM = 0.35f;
-		float DividLineL = 0.25f;
-		glm::vec4 DarkColor;
+
+		Ref<MaterialTable>  MaterialTable;
 	};
 }

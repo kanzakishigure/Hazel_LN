@@ -23,7 +23,8 @@ void main()
 	//（Moldle-1）T
 	V_Normal = mat3(transpose(inverse(U_Transform)))*a_Normal;
 	//Get the position in worldspcae
-	V_FragPos = mat3(U_Transform)*a_Position;
+	vec4 pos = U_Transform*vec4(a_Position, 1.0);
+	V_FragPos = vec3(pos.xyz)/pos.w;
 }
 
 #type fragment
@@ -72,6 +73,8 @@ in vec3 V_Normal;
 //camera attribute
 uniform vec3 U_ViewPos;
 
+
+
 vec3 CalcDirLight(DirLight dirLight,vec3 norm,vec3 viewdir)
 {
 
@@ -105,7 +108,7 @@ vec3 CalcPointLight(PointLight pointLight,vec3 norm,vec3 fragPos,vec3 viewDir)
     vec3 diffuse = pointLight.Diffuse_Intensity * diff * texture2D(material.U_DiffuseTexture,V_TexCroods).rgb;
     vec3 specular = pointLight.Specular_Intensity * spec * texture2D(material.U_SpecularTexture,V_TexCroods).rgb;
     
-    diffuse *= attenuation;
+    //diffuse *= attenuation;
     specular *= attenuation;
     return (ambient + diffuse + specular);
 }

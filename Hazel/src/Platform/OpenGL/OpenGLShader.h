@@ -38,7 +38,7 @@ namespace Hazel
 		virtual void SetInt(const std::string& name, int value) override;
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) override;
 	public:
-		virtual const ShaderBuffer& GetShaderBuffer() const override { return m_Shaderbuffer; }
+		virtual const ShaderBuffer& GetShaderBuffer()  const override { return m_Shaderbuffer; }
 		virtual const void SetShaderBuffer(ShaderBufferLayout layout)  override;
 		uint32_t m_RendererID;
 		std::string m_Name;
@@ -48,6 +48,6 @@ namespace Hazel
 		std::unordered_map<GLenum,std::string> PreProcess(const std::string& source);
 		void Compile(const std::unordered_map<GLenum, std::string>& shadersource);
 	private:
-		 ShaderBuffer m_Shaderbuffer;
+		ShaderBuffer m_Shaderbuffer;
 	};
 }

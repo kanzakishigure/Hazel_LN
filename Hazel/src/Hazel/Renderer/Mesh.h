@@ -22,13 +22,17 @@ namespace Hazel
 		glm::vec2 Texturecroods;
 		glm::vec4 BaseColor;
 		glm::vec3 Tangent;
+		glm::vec3 Bitangent;
 
 	};
 	struct Index
 	{
 		uint32_t V0, V1, V2;
 	};
-
+	struct Trangle
+	{
+		uint32_t i0, i1, i2;
+	};
 	class SubMesh
 	{
 	public:
@@ -44,6 +48,7 @@ namespace Hazel
 		glm::mat4 LocalTransform{ 1.0f };
 		BindBox BoundingBox;
 	};
+
 	class MeshSource
 	{
 	public:
@@ -52,8 +57,8 @@ namespace Hazel
 
 		MeshSource(const Vertex* verteices, const Index* indices);
 
-		void ProcessNode(const aiNode* node, const aiScene* scene,int level);
-		SubMesh ProcessMesh(const aiMesh* mesh, const aiScene* scene,int level);
+		void ProcessNode(const aiNode* node, const aiScene* scene);
+		SubMesh ProcessMesh(const aiMesh* mesh, const aiScene* scene,float meshoffset);
 
 		const std::vector<SubMesh>& GetSubMesh() { return m_SubMeshes; }
 

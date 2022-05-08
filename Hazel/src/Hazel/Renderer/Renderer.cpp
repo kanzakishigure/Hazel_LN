@@ -32,52 +32,88 @@ namespace Hazel {
 		}
 		//shader
 		{
-			s_RendererData->m_ShaderLibrary = CreateRef<ShaderLibrary>();
-			auto StaticShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
-			StaticShader->SetShaderBuffer({
-					{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
-					{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
-					{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
-					{ShaderDataType::Float, MaterialAsset::GetShininessLocation()},
-					{ShaderDataType::Float3,"dirLight.LightDir"},
-					{ShaderDataType::Float3,"dirLight.Ambient_Intensity"},
-					{ShaderDataType::Float3,"dirLight.Diffuse_Intensity"},
-					{ShaderDataType::Float3,"dirLight.Specular_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Position"},
-					{ShaderDataType::Float3,"pointLight.Ambient_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Diffuse_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Specular_Intensity"},
-					{ShaderDataType::Float3,"U_ViewPos"}					
-				});
-			s_RendererData->m_ShaderLibrary->Add(StaticShader);
-			auto StencilShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StencilShader.glsl");
-			StencilShader->SetShaderBuffer({});
-			s_RendererData->m_ShaderLibrary->Add(StencilShader);
+			{
+				s_RendererData->m_ShaderLibrary = CreateRef<ShaderLibrary>();
+				auto StaticShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
+				StaticShader->SetShaderBuffer({
+						{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
+						{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
+						{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
+						{ShaderDataType::Float, MaterialAsset::GetShininessLocation()},
+						{ShaderDataType::Float3,"dirLight.LightDir"},
+						{ShaderDataType::Float3,"dirLight.Ambient_Intensity"},
+						{ShaderDataType::Float3,"dirLight.Diffuse_Intensity"},
+						{ShaderDataType::Float3,"dirLight.Specular_Intensity"},
+						{ShaderDataType::Float3,"pointLight.Position"},
+						{ShaderDataType::Float3,"pointLight.Ambient_Intensity"},
+						{ShaderDataType::Float3,"pointLight.Diffuse_Intensity"},
+						{ShaderDataType::Float3,"pointLight.Specular_Intensity"},
+						{ShaderDataType::Float3,"U_ViewPos"}
+					});
+				s_RendererData->m_ShaderLibrary->Add(StaticShader);
+			}
 
-			auto PostShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/PostShader.glsl");
-			PostShader->SetShaderBuffer({});
-			s_RendererData->m_ShaderLibrary->Add(PostShader);
+			{
+				auto StencilShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StencilShader.glsl");
+				StencilShader->SetShaderBuffer({});
+				s_RendererData->m_ShaderLibrary->Add(StencilShader);
+			}
 
-			auto OutLineShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/OutLineShader.glsl");
-			OutLineShader->SetShaderBuffer({});
-			s_RendererData->m_ShaderLibrary->Add(OutLineShader);
+			{
+				auto PostShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/PostShader.glsl");
+				PostShader->SetShaderBuffer({});
+				s_RendererData->m_ShaderLibrary->Add(PostShader);
+			}
+			
+			{
+				auto OutLineShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/OutLineShader.glsl");
+				OutLineShader->SetShaderBuffer({});
+				s_RendererData->m_ShaderLibrary->Add(OutLineShader);
+			}
 
-			auto ToneShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/ToneShader.glsl");
-			ToneShader->SetShaderBuffer({ 
-					{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
-					{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
-					{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
-					{ShaderDataType::Float, MaterialAsset::GetShininessLocation()},
-					{ShaderDataType::Float3,"dirLight.LightDir"},
-					{ShaderDataType::Float3,"dirLight.Ambient_Intensity"},
-					{ShaderDataType::Float3,"dirLight.Diffuse_Intensity"},
-					{ShaderDataType::Float3,"dirLight.Specular_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Position"},
-					{ShaderDataType::Float3,"pointLight.Ambient_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Diffuse_Intensity"},
-					{ShaderDataType::Float3,"pointLight.Specular_Intensity"},
-					{ShaderDataType::Float3,"U_ViewPos"} });
-			s_RendererData->m_ShaderLibrary->Add(ToneShader);
+			{
+				auto ToneShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/ToneShader.glsl");
+				ToneShader->SetShaderBuffer({
+						{ShaderDataType::Float3,MaterialAsset::GetDiffuseLocation()},
+						{ShaderDataType::Float3,MaterialAsset::GetSpecularLocation()},
+						{ShaderDataType::Float3,MaterialAsset::GetEmissionLocation()},
+						{ShaderDataType::Float, MaterialAsset::GetShininessLocation()}
+					});
+				s_RendererData->m_ShaderLibrary->Add(ToneShader);
+			}
+
+			{
+				auto DebugShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/DebugShader.glsl");
+				DebugShader->SetShaderBuffer({
+						{ShaderDataType::Float,MaterialAsset::GetShininessLocation()},
+						{ShaderDataType::Float,"U_Debug"},
+						{ShaderDataType::Color3,"U_DarkColor"},
+						{ShaderDataType::Color4,"U_DarkColor4"}
+					});
+				s_RendererData->m_ShaderLibrary->Add(DebugShader);
+			}
+			
+
+			{
+				auto DebugnormalShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/DebugNormalShader.glsl");
+				DebugnormalShader->SetShaderBuffer({
+					});
+				s_RendererData->m_ShaderLibrary->Add(DebugnormalShader);
+			}
+			
+			{
+				auto ToneCharactorShader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/GenShin_Shader/ToneCharactorShader.glsl");
+				ToneCharactorShader->SetShaderBuffer({
+					{ShaderDataType::Color4,"U_ShadowMultColor"},
+					{ShaderDataType::Color4,"U_DarkShadowMultColor"},
+					{ShaderDataType::Float,"U_ShadowArea"},
+					{ShaderDataType::Float,"U_FixDarkShadow"},
+					{ShaderDataType::Float,"U_ShadowSmooth"},
+					{ShaderDataType::Float,"U_DarkShadowSmooth"},
+					{ShaderDataType::Float,"U_DarkShadowArea"}
+					});
+				s_RendererData->m_ShaderLibrary->Add(ToneCharactorShader);
+			}
 		}
 
 	}
@@ -116,6 +152,7 @@ namespace Hazel {
 	{
 		return s_RendererData->BlackTexture;
 	}
+
 
 	Ref<ShaderLibrary> Renderer::GetShaderLibrary()
 	{

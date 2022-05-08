@@ -45,7 +45,7 @@ namespace Hazel
 
 		}
 		template <typename T>
-		T& Read(uint32_t offset, uint32_t size)
+		T& Read(uint32_t offset)
 		{
 			return *(T*)((byte*)Data + offset);
 		}

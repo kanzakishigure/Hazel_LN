@@ -13,8 +13,13 @@ namespace Hazel
 			:Name(name), Size(size),Offset(offset),Type(type) {}
 		const std::string& GetName() { return Name; }
 		uint32_t GetSize() { return Size; }
+		const  uint32_t GetSize() const { return Size; }
+
 		uint32_t GetOffset() { return Offset; }
+		const uint32_t GetOffset() const { return Offset; }
+
 		ShaderDataType GetType() { return Type; }
+		const ShaderDataType GetType() const { return Type; }
 
 	private:
 		std::string Name;
