@@ -3,7 +3,7 @@
 #include "Hazel/Core/StorageBuffer.h"
 #include "glm/glm.hpp"
 namespace Hazel {
-	//²ÎÕÕchernoµÄvulkan°æ²ÄÖÊÀà½øÐÐ½øÐÐ¸ÄÐ´
+	//ï¿½ï¿½ï¿½ï¿½chernoï¿½ï¿½vulkanï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½Ð¸ï¿½Ð´
 
 	
 	class OpenGLMaterial :public Material
@@ -20,10 +20,24 @@ namespace Hazel {
 		virtual void Set(const std::string& name, const glm::vec2& value) override;
 		virtual void Set(const std::string& name, const glm::vec3& value) override;
 		virtual void Set(const std::string& name, const glm::vec4& value) override;
-		virtual void Set(const std::string& name, int value) override;
+		virtual void Set(const std::string& name, bool value)  override;
 
+		virtual void Set(const std::string& name, int value) override;
+		virtual void Set(const std::string& name, const glm::ivec2& value) override;
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) override;
 
+		virtual void Set(const std::string& name, Ref<Texture2D> value) override;
+
+		virtual glm::mat4& GetMat4(const std::string& name) override;
+		virtual float& GetFloat(const std::string& name)     override;
+		virtual glm::vec2& GetVec2(const std::string& name)  override;
+		virtual glm::vec3& GetVec3(const std::string& name)  override;
+		virtual glm::vec4& GetVec4(const std::string& name)  override;
+		virtual int& GetInt(const std::string& name)         override;
+		virtual glm::ivec2& GetIVec2(const std::string& name) override;
+		
+	public:
+		
 		template <typename T>
 		void Set(const std::string& name, const T& value)
 		{

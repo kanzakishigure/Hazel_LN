@@ -36,7 +36,33 @@ namespace Hazel
 		// scene init
 		{
 			//Create Scene
-			m_ActiveScene = CreateRef<Scene>();
+			{
+				m_ActiveScene = CreateRef<Scene>();
+				auto pointlight = m_ActiveScene->CreateEntity("PointLight");
+
+				auto& plightCMP =pointlight.AddComponent<PointLightComponent>();
+				plightCMP.Diffuse_Intensity = glm::vec3(1.0);
+				plightCMP.Specular_Intensity = glm::vec3(1.0);
+				plightCMP.Ambient_Intensity = glm::vec3(1.0);
+				auto& CMP = pointlight.GetComponent<TransformComponent>();
+				CMP.Position = { 10.0,20.0,3.3 };
+				
+				auto DirLight = m_ActiveScene->CreateEntity("DirLight");
+				auto& dirCMP = DirLight.AddComponent<DirLightComponent>();
+				dirCMP.Diffuse_Intensity = glm::vec3(1.0);
+				dirCMP.Specular_Intensity = glm::vec3(1.0);
+				dirCMP.Ambient_Intensity = glm::vec3(1.0);
+			}
+			{
+				auto RefEntity = m_ActiveScene->CreateEntity("RefEntity");
+				auto& spritCMP = RefEntity.AddComponent<SpriteRendererComponent>();
+				spritCMP.Texture = Hazel::Texture2D::Create("F:/Kans3D/Hazel/KansEditor/assets/textures/GY.png");
+				auto& transformCMP = RefEntity.GetComponent<TransformComponent>();
+				transformCMP.Scale = {19.2f,10.8f,1.0f};
+				transformCMP.Position = { 2.3f,0.0f,-12.0f};
+			}
+			//create Entity
+#if 0
 			{
 				auto SunEntity = m_ActiveScene->CreateEntity("Entity A");
 				auto& spritCMP = SunEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 244.0f/256.0f, 185.0f/256.0f, 116.0f/256.0f,1.0f });
@@ -67,19 +93,140 @@ namespace Hazel
 			// createMesh test
 #if 1
 			{
-				auto hutaoEntity = m_ActiveScene->CreateEntity("HuTao");
-				auto& meshCMP =  hutaoEntity.AddComponent<MeshComponent>();
-				auto MeshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/ht.fbx");
-				auto Meshshader = Shader::Create("F:/Kans3D/Hazel/KansEditor/assets/shaders/StaticMeshShader.glsl");
-				Meshshader->SetShaderBuffer({
-					{ShaderDataType::Mat4,"U_ViewProjection"},
-					{ShaderDataType::Mat4,"U_Transform"}
-					});
-				Ref<Material> StaticMeshShader = Material::Create(Meshshader, "StaticMesh_MTL");
-				MeshSrouce->SetMaterial(StaticMeshShader);
-				meshCMP.MesHSource = MeshSrouce;
-				auto& TransformCMP = hutaoEntity.GetComponent<TransformComponent>();
-				TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+				if(0)
+				{
+					auto DBYEntity = m_ActiveScene->CreateEntity("DBY");
+					auto& meshCMP = DBYEntity.AddComponent<StaticMeshComponent>();
+					DBYEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/dby/dby.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = DBYEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { -0.6f,-1.6f,-2.5f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+				if (0)
+				{
+					auto GYEntity = m_ActiveScene->CreateEntity("GY");
+					auto& meshCMP = GYEntity.AddComponent<StaticMeshComponent>();
+					auto& materialCMP = GYEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/GY/GY.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					materialCMP.MaterialTable = meshCMP.MaterialTable;
+					auto& TransformCMP = GYEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.2f,0.2f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,glm::radians(0.0f)};
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+
+					//Init Material
+					{
+						int matCount = materialCMP.MaterialTable->GetMaterialCount();
+						for (uint32_t i = 0; i < matCount; i++)
+						{
+							auto& mat = materialCMP.MaterialTable->GetMaterialAsset(i)->GetMaterial();
+							mat->Set("U_ShadowMultColor", glm::vec4(1.0));
+							mat->Set("U_DarkShadowMultColor", glm::vec4(1.0));						
+							mat->Set("U_ShadowArea", 0.5f);
+							mat->Set("U_DarkShadowArea", 0.5f);
+							mat->Set("U_FixDarkShadow", 0.5f);
+							mat->Set("U_ShadowSmooth", 0.5f);
+							mat->Set("U_DarkShadowSmooth", 0.5f);
+							mat->Set("U_RampShadowRange", 0.5f);
+						
+						}
+					}
+				}
+				if (1)
+				{
+					auto GY_LightEntity = m_ActiveScene->CreateEntity("GY_Light");
+					auto& meshCMP = GY_LightEntity.AddComponent<StaticMeshComponent>();
+					auto& materialCMP = GY_LightEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/GY_Light/GY_Light.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					materialCMP.MaterialTable = meshCMP.MaterialTable;
+					auto& TransformCMP = GY_LightEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.2f,-3.0f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,glm::radians(0.0f) };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+
+					//Init Material
+					MaterialUtil::InitMaterial(materialCMP.MaterialTable);
+				}
+				if (0)
+				{
+					auto YLEntity = m_ActiveScene->CreateEntity("YL");
+					auto& meshCMP = YLEntity.AddComponent<StaticMeshComponent>();
+					auto& materialCMP = YLEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/YL/YL.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					materialCMP.MaterialTable = meshCMP.MaterialTable;
+					auto& TransformCMP = YLEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.2f,0.2f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,glm::radians(0.0f) };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+
+					//Init Material
+					{
+						int matCount = materialCMP.MaterialTable->GetMaterialCount();
+						for (uint32_t i = 0; i < matCount; i++)
+						{
+							auto& mat = materialCMP.MaterialTable->GetMaterialAsset(i)->GetMaterial();
+							mat->Set("U_ShadowMultColor", glm::vec4(1.0));
+							mat->Set("U_DarkShadowMultColor", glm::vec4(1.0));
+							mat->Set("U_ShadowArea", 0.5f);
+							mat->Set("U_DarkShadowArea", 0.5f);
+							mat->Set("U_FixDarkShadow", 0.5f);
+							mat->Set("U_ShadowSmooth", 0.5f);
+							mat->Set("U_DarkShadowSmooth", 0.5f);
+
+						}
+					}
+				}
+				if (0)
+				{
+					auto BOXEntity = m_ActiveScene->CreateEntity("BOX");
+					auto& meshCMP = BOXEntity.AddComponent<StaticMeshComponent>();
+					BOXEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/BOX/BOX.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = BOXEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,0.0f,-20.0f };
+					TransformCMP.Rotation = { 0.0f,0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+				if (0)
+				{
+					auto YLEntity = m_ActiveScene->CreateEntity("YL");
+					auto& meshCMP = YLEntity.AddComponent<StaticMeshComponent>();
+					YLEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/YL/YL.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = YLEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,0.0f,-20.0f };
+					TransformCMP.Rotation = { 0.0f,0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+#endif
+#if 0
+				{
+					auto nanosuitEntity = m_ActiveScene->CreateEntity("nanosuit");
+					auto& meshCMP = nanosuitEntity.AddComponent<StaticMeshComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/nanosuit/nanosuit.obj");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					auto& TransformCMP = nanosuitEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.6f,-2.5f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+				}
+				
+#endif // DEBUG
 			}
 #endif			
 			//Native Script

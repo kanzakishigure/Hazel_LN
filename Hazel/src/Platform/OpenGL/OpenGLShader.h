@@ -29,6 +29,8 @@ namespace Hazel
 		void UploadUniform2Int(const std::string& name, const glm::ivec2& value)const;
 		void UploadUniformInt(const std::string& name, const int value)const;
 		void UploadUniformIntArray(const std::string& name,const int count ,const int* value)const;
+
+		void UploadUniformBool(const std::string& name, const bool value)const;
 	public:
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) override;
 		virtual void SetFloat(const std::string& name, float value) override;
@@ -36,7 +38,9 @@ namespace Hazel
 		virtual void SetFloat3(const std::string& name, const glm::vec3& value) override;
 		virtual void SetFloat4(const std::string& name, const glm::vec4& value) override;
 		virtual void SetInt(const std::string& name, int value) override;
+		virtual void SetInt2(const std::string& name,const glm::ivec2& value) override;
 		virtual void SetIntArray(const std::string& name, const int count, const int* value) override;
+		virtual void SetBool(const std::string& name, const bool value) override;
 	public:
 		virtual const ShaderBuffer& GetShaderBuffer() const override { return m_Shaderbuffer; }
 		virtual const void SetShaderBuffer(ShaderBufferLayout layout)  override;
