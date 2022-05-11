@@ -169,7 +169,6 @@ namespace Hazel
 								//RampMap
 								std::string Rampmappath = texturepath;
 								auto index = Rampmappath.find_last_of(".");
-								Rampmappath.replace(index, Rampmappath.length(), ".bmp");
 								Rampmappath.insert(index, "_Ramp");
 
 								if (KansFileSystem::Exists(Rampmappath))

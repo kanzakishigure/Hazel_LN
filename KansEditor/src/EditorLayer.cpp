@@ -48,7 +48,7 @@ namespace Hazel
 				plightCMP.Specular_Intensity = glm::vec3(1.0);
 				plightCMP.Ambient_Intensity = glm::vec3(1.0);
 				auto& CMP = pointlight.GetComponent<TransformComponent>();
-				CMP.Position = { 0.0,0.0,3.3 };
+				CMP.Position = { 10.0,20.0,3.3 };
 				
 				auto DirLight = m_ActiveScene->CreateEntity("DirLight");
 				auto& dirCMP = DirLight.AddComponent<DirLightComponent>();
@@ -107,7 +107,7 @@ namespace Hazel
 					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,0.0f };
 					TransformCMP.Scale = { glm::vec3(0.15f) };
 				}
-				if (1)
+				if (0)
 				{
 					auto GYEntity = m_ActiveScene->CreateEntity("GY");
 					auto& meshCMP = GYEntity.AddComponent<StaticMeshComponent>();
@@ -134,7 +134,56 @@ namespace Hazel
 							mat->Set("U_FixDarkShadow", 0.5f);
 							mat->Set("U_ShadowSmooth", 0.5f);
 							mat->Set("U_DarkShadowSmooth", 0.5f);
+							mat->Set("U_RampShadowRange", 0.5f);
 						
+						}
+					}
+				}
+				if (1)
+				{
+					auto GY_LightEntity = m_ActiveScene->CreateEntity("GY_Light");
+					auto& meshCMP = GY_LightEntity.AddComponent<StaticMeshComponent>();
+					auto& materialCMP = GY_LightEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/GY_Light/GY_Light.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					materialCMP.MaterialTable = meshCMP.MaterialTable;
+					auto& TransformCMP = GY_LightEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.2f,-3.0f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,glm::radians(0.0f) };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+
+					//Init Material
+					MaterialUtil::InitMaterial(materialCMP.MaterialTable);
+				}
+				if (0)
+				{
+					auto YLEntity = m_ActiveScene->CreateEntity("YL");
+					auto& meshCMP = YLEntity.AddComponent<StaticMeshComponent>();
+					auto& materialCMP = YLEntity.AddComponent<MaterialComponent>();
+					auto meshSrouce = CreateRef<MeshSource>("F:/Kans3D/Hazel/KansEditor/assets/model/YL/YL.fbx");
+					meshCMP.StaticMesh = CreateRef<StaticMesh>(meshSrouce);
+					meshCMP.MaterialTable = meshCMP.StaticMesh->GetMaterials();
+					materialCMP.MaterialTable = meshCMP.MaterialTable;
+					auto& TransformCMP = YLEntity.GetComponent<TransformComponent>();
+					TransformCMP.Position = { 0.0f,-1.2f,0.2f };
+					TransformCMP.Rotation = { glm::radians(-20.0f),0.0f,glm::radians(0.0f) };
+					TransformCMP.Scale = { glm::vec3(0.15f) };
+
+					//Init Material
+					{
+						int matCount = materialCMP.MaterialTable->GetMaterialCount();
+						for (uint32_t i = 0; i < matCount; i++)
+						{
+							auto& mat = materialCMP.MaterialTable->GetMaterialAsset(i)->GetMaterial();
+							mat->Set("U_ShadowMultColor", glm::vec4(1.0));
+							mat->Set("U_DarkShadowMultColor", glm::vec4(1.0));
+							mat->Set("U_ShadowArea", 0.5f);
+							mat->Set("U_DarkShadowArea", 0.5f);
+							mat->Set("U_FixDarkShadow", 0.5f);
+							mat->Set("U_ShadowSmooth", 0.5f);
+							mat->Set("U_DarkShadowSmooth", 0.5f);
+
 						}
 					}
 				}

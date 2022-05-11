@@ -88,7 +88,8 @@ namespace Hazel {
 						{ShaderDataType::Float,MaterialAsset::GetShininessLocation()},
 						{ShaderDataType::Float,"U_Debug"},
 						{ShaderDataType::Color3,"U_DarkColor"},
-						{ShaderDataType::Color4,"U_DarkColor4"}
+						{ShaderDataType::Color4,"U_DarkColor4"},
+
 					});
 				s_RendererData->m_ShaderLibrary->Add(DebugShader);
 			}
@@ -110,7 +111,14 @@ namespace Hazel {
 					{ShaderDataType::Float,"U_FixDarkShadow"},
 					{ShaderDataType::Float,"U_ShadowSmooth"},
 					{ShaderDataType::Float,"U_DarkShadowSmooth"},
-					{ShaderDataType::Float,"U_DarkShadowArea"}
+					{ShaderDataType::Float,"U_DarkShadowArea"},
+					{ShaderDataType::Float,"U_RampShadowRange"},
+					{ShaderDataType::Bool,"U_UseRamp"},
+					{ShaderDataType::Float2,"U_RampSkin"},
+					{ShaderDataType::Float2,"U_RampTights"},
+					{ShaderDataType::Float2,"U_RampMetal"},
+					{ShaderDataType::Float2,"U_RampSoft"},
+					{ShaderDataType::Float2,"U_RampSilk"}
 					});
 				s_RendererData->m_ShaderLibrary->Add(ToneCharactorShader);
 			}

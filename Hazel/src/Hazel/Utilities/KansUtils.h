@@ -16,6 +16,15 @@ namespace Hazel
 			static void SetMeshOffset(std::vector<Vertex>& verteices,const std::vector<SubMesh>& submushes,float offset);
 			static void BackMeshNormal(std::vector<Vertex>& verteices,const std::vector<glm::vec3>& smoothnormal);
 
+	public:
+		
+
+	};
+	class MaterialUtil
+	{
+		public:
+		//TEMP
+		static void InitMaterial(const Ref<MaterialTable> materialTable);
 	};
 
 }

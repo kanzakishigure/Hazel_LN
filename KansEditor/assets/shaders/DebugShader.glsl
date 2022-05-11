@@ -188,7 +188,7 @@ void main()
 	diffuse = texture2D(material.U_ToneRampMap,vec2(0,max(NoL,0.0)));
 	diffuse = mix(Texcolor,diffuse,Metalmask);
 	O_Normal = diffuse*Texcolor*vec4(pointLight.Diffuse_Intensity,1.0) ;
-	O_Color = vec4(U_DarkColor,1.0);
+	//O_Color = vec4(U_DarkColor,1.0);
 	O_Normal = U_DarkColor4;
 	//O_Normal = Texcolor;
 	//

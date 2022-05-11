@@ -195,7 +195,7 @@ namespace Hazel
 			ImGui::PopFont();
 
 			ImGui::SameLine();
-			ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("##X", &value.x, 0.005f, 0.0f, 0.0f, "%.2f");
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
 			ImGui::PopStyleColor(3);
@@ -213,7 +213,7 @@ namespace Hazel
 
 			ImGui::SameLine();
 
-			ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("##Y", &value.y, 0.005f, 0.0f, 0.0f, "%.2f");
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
 			ImGui::PopStyleColor(3);
@@ -248,9 +248,8 @@ namespace Hazel
 			if (ImGui::Button("Value", buttonsize))
 				value = resetvalue;
 			ImGui::PopFont();
-
 			ImGui::SameLine();
-			ImGui::DragFloat("##Value", &value, 0.01f, 0.0f, 10.0f, "%.4f");
+			ImGui::DragFloat("##Value", &value, 0.001f, -10.0f, 10.0f, "%.4f");
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
 			ImGui::PopStyleColor(3);

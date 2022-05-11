@@ -283,76 +283,98 @@ namespace Hazel
 			});
 		KansUI::DrawComponent<MaterialComponent>("Material", entity, [](MaterialComponent& component) {
 			ImGui::Separator();
-			
+			const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed
+				| ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding;
 			auto materialCount = component.MaterialTable->GetMaterialCount();
 			for (uint32_t i = 0; i < materialCount; i++)
 			{
+				ImGui::Separator();
 				auto& material = component.MaterialTable->GetMaterialAsset(i)->GetMaterial();
 				auto& materialBuffer = material->GetShaderBuffer();
-				for (auto& UniformMap : materialBuffer.ShaderUniforms)
-				{
-					ImGui::Text("material :%s", material->GetName().c_str());
-					const std::string& uniformName = UniformMap.first;
-					auto& uniform = UniformMap.second;
-					ImGui::Separator();
-					switch (uniform.GetType())
-					{
-					case ShaderDataType::Float: 
-					{
-						float value = 0.0f;
-						value = material->GetFloat(uniformName);
-						std::string label = material->GetName() + "   " + uniformName;
-						KansUI::DrawFloatControl(label, value);
-						material->Set(uniformName, value);
-					}
-						break;
-					case ShaderDataType::Float2:
-					{
-						glm::vec2 value = glm::vec2(1.0);
-						value = material->GetVec2(uniformName);
-						std::string label = material->GetName() + "   " + uniformName;
-						KansUI::DrawVec2Control(label, value);
-						material->Set(uniformName, value);
-					}
-						break;
-					case ShaderDataType::Float3:
-					{
-						glm::vec3 value = glm::vec3(1.0);
-						value = material->GetVec3(uniformName);
-						std::string label = material->GetName() + "   " + uniformName;
-						KansUI::DrawVec3Control(label, value);
-						material->Set(uniformName, value);
-					}
-						break;
-					case ShaderDataType::Float4:
-					{
-						glm::vec4 value = glm::vec4(1.0);
-						value = material->GetVec4(uniformName);
-						std::string label = material->GetName() + "   " + uniformName;
-						KansUI::DrawVec4Control(label, value);
-						material->Set(uniformName, value);
-					}
-						break;
-					case ShaderDataType::Color4:
-					{
-						glm::vec4 value = glm::vec4(1.0);
-						value = material->GetVec4(uniformName);
-						std::string label = material->GetName() +"   "+ uniformName;
-						ImGui::ColorEdit4(label.c_str(), glm::value_ptr(value));
-						material->Set(uniformName, value);
-					}
-						break;
-					case ShaderDataType::Color3:
-					{
-						glm::vec3 value = glm::vec3(1.0);
-						value = material->GetVec4(uniformName);
-						std::string label = material->GetName() + "   " + uniformName;
-						ImGui::ColorEdit3(label.c_str(), glm::value_ptr(value));
-						material->Set(uniformName, value);
-					}
-					break;
 
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+				auto contentregion = ImGui::GetContentRegionAvail();
+				float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+				bool open = ImGui::TreeNodeEx((void*)i, treeNodeFlags, material->GetName().c_str());
+				ImGui::PopStyleVar();
+				
+				if (open)
+				{
+					for (auto& UniformMap : materialBuffer.ShaderUniforms)
+					{
+						ImGui::Separator();
+						const std::string& uniformName = UniformMap.first;
+						auto& uniform = UniformMap.second;
+						switch (uniform.GetType())
+						{
+						case ShaderDataType::Float:
+						{
+							float value = 0.0f;
+							value = material->GetFloat(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							KansUI::DrawFloatControl(label, value);
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Float2:
+						{
+							glm::vec2 value = glm::vec2(1.0);
+							value = material->GetVec2(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							KansUI::DrawVec2Control(label, value);
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Float3:
+						{
+							glm::vec3 value = glm::vec3(1.0);
+							value = material->GetVec3(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							KansUI::DrawVec3Control(label, value);
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Float4:
+						{
+							glm::vec4 value = glm::vec4(1.0);
+							value = material->GetVec4(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							KansUI::DrawVec4Control(label, value);
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Color4:
+						{
+							glm::vec4 value = glm::vec4(1.0);
+							value = material->GetVec4(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							ImGui::ColorEdit4(label.c_str(), glm::value_ptr(value));
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Color3:
+						{
+							glm::vec3 value = glm::vec3(1.0);
+							value = material->GetVec4(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							ImGui::ColorEdit3(label.c_str(), glm::value_ptr(value));
+							material->Set(uniformName, value);
+						}
+						break;
+						case ShaderDataType::Int2:
+						{
+							glm::ivec2 value = glm::ivec2(0);
+							value = material->GetIVec2(uniformName);
+							std::string label = material->GetName() + "   " + uniformName;
+							ImGui::DragInt2(label.c_str(), glm::value_ptr(value),1,0,255);
+							material->Set(uniformName, value);
+						}
+						break;
+
+						}
+						ImGui::NewLine();
 					}
+					ImGui::TreePop();
 				}
 			}
 			});
