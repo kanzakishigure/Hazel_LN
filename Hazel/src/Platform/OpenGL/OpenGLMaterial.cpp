@@ -11,6 +11,43 @@ namespace Hazel {
 		m_Shader->SetIntArray(name, count, value);
 	}
 
+	
+
+	glm::mat4& OpenGLMaterial::GetMat4(const std::string& name) 
+	{
+		return Get<glm::mat4>(name);
+	}
+
+	float& OpenGLMaterial::GetFloat(const std::string& name)
+	{
+		return Get<float>(name);
+	}
+
+	glm::vec2& OpenGLMaterial::GetVec2(const std::string& name)
+	{
+		return Get<glm::vec2>(name);
+	}
+
+	glm::vec3& OpenGLMaterial::GetVec3(const std::string& name)
+	{
+		return Get<glm::vec3>(name);
+	}
+
+	glm::vec4& OpenGLMaterial::GetVec4(const std::string& name)
+	{
+		return Get<glm::vec4>(name);
+	}
+
+	int& OpenGLMaterial::GetInt(const std::string& name)
+	{
+		return Get<int>(name);
+	}
+
+	glm::ivec2& OpenGLMaterial::GetIVec2(const std::string& name)
+	{
+		return Get<glm::ivec2>(name);
+	}
+
 	const std::string& OpenGLMaterial::GetName() const
 	{
 		return m_Name;
@@ -31,12 +68,17 @@ namespace Hazel {
 			std::string name = uniformbuffer.GetName();
 			switch (uniformbuffer.GetType())
 			{
-				case ShaderDataType::Float:  m_Shader->SetFloat(name, m_UniformBuffer.Read<float>(offset, size));     break;
-				case ShaderDataType::Float2: m_Shader->SetFloat2(name, m_UniformBuffer.Read<glm::vec2>(offset, size)); break;
-				case ShaderDataType::Float3: m_Shader->SetFloat3(name, m_UniformBuffer.Read<glm::vec3>(offset, size)); break;
-				case ShaderDataType::Float4: m_Shader->SetFloat4(name, m_UniformBuffer.Read<glm::vec4>(offset, size)); break;
-				case ShaderDataType::Mat4:   m_Shader->SetMat4(name, m_UniformBuffer.Read<glm::mat4>(offset, size));  break;
-				case ShaderDataType::Int:	 m_Shader->SetInt(name, m_UniformBuffer.Read<int>(offset, size));		  break;
+				case ShaderDataType::Float:  m_Shader->SetFloat(name, m_UniformBuffer.Read<float>(offset));       break;
+				case ShaderDataType::Float2: m_Shader->SetFloat2(name,m_UniformBuffer.Read<glm::vec2>(offset));   break;
+				case ShaderDataType::Float3: m_Shader->SetFloat3(name,m_UniformBuffer.Read<glm::vec3>(offset));   break;
+				case ShaderDataType::Float4: m_Shader->SetFloat4(name,m_UniformBuffer.Read<glm::vec4>(offset));   break;
+				case ShaderDataType::Mat4:   m_Shader->SetMat4(name,  m_UniformBuffer.Read<glm::mat4>(offset));   break;
+				case ShaderDataType::Color3: m_Shader->SetFloat3(name, m_UniformBuffer.Read<glm::vec3>(offset));  break;
+				case ShaderDataType::Color4: m_Shader->SetFloat4(name, m_UniformBuffer.Read<glm::vec4>(offset));  break;
+				case ShaderDataType::Int:	 m_Shader->SetInt(name,   m_UniformBuffer.Read<int>(offset));		  break;
+				case ShaderDataType::Int2:	 m_Shader->SetInt2(name, m_UniformBuffer.Read<glm::ivec2>(offset));		  break;
+				case ShaderDataType::Bool:	 m_Shader->SetBool(name, m_UniformBuffer.Read<bool>(offset));		  break;
+
 			}
 		}
 		//bug here can't bind texture;
@@ -105,10 +147,18 @@ namespace Hazel {
 	{
 		Set<int>(name, value);
 	}
-
+	void OpenGLMaterial::Set(const std::string& name, bool value)
+	{
+		Set<bool>(name, value);
+	}
 	void OpenGLMaterial::Set(const std::string& name, Ref<Texture2D> value)
 	{
 		m_Texture[name] = value;
+	}
+
+	void OpenGLMaterial::Set(const std::string& name, const glm::ivec2& value)
+	{
+		Set<glm::ivec2>(name, value);
 	}
 
 	ShaderUniform* OpenGLMaterial::FindUniform(const std::string& name)

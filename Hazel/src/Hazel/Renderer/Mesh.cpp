@@ -3,8 +3,8 @@
 #include "Mesh.h"
 #include "Hazel/Renderer/Renderer.h"
 
-const uint32_t importFlag = aiProcess_CalcTangentSpace | //¼ÆËãÇÐÏß¿Õ¼ä
-							aiProcess_Triangulate | //±£Ö¤Ò»¶¨Ã¿¸öÍ¼ÔªµÄ»ù±¾µ¥Î»ÊÇÈý½ÇÐÎ£¬»á³öÏÖ¶à¸öË÷Òý
+const uint32_t importFlag = aiProcess_CalcTangentSpace | //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¿Õ¼ï¿½
+							aiProcess_Triangulate | //ï¿½ï¿½Ö¤Ò»ï¿½ï¿½Ã¿ï¿½ï¿½Í¼Ôªï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							aiProcess_JoinIdenticalVertices |
 							aiProcess_SortByPType;
 
@@ -75,7 +75,7 @@ namespace Hazel
 			v.Normal =	 { mesh->mNormals[i].x,
 						   mesh->mNormals[i].y,
 						   mesh->mNormals[i].z };
-			if (mesh->mTextureCoords[0]) // Íø¸ñÊÇ·ñÓÐÎÆÀí×ø±ê£¿
+			if (mesh->mTextureCoords[0]) // ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¿
 			{
 				v.Texturecroods = { mesh->mTextureCoords[0][i].x,
 									mesh->mTextureCoords[0][i].y,};
@@ -123,12 +123,58 @@ namespace Hazel
 					materialcount = aimaterial->GetTextureCount(aiTextureType_DIFFUSE);
 					if (materialcount)
 					{
-						aiString aistr = {};
-						aimaterial->GetTexture(aiTextureType_DIFFUSE,0,&aistr);
-						HZ_TRACE("{0} DIFFUSE texture: {1} ", m_LoadPath.c_str(), aistr.C_Str());
-						std::string texturepath = m_LoadPath +"/"+ aistr.C_Str();
-						auto texture = Texture2D::Create(texturepath);
-						mtl->Set("U_DiffuseTexture", texture);
+						int materialcount = 0;
+						materialcount = aimaterial->GetTextureCount(aiTextureType_DIFFUSE);
+						if (materialcount)
+						{
+							aiString aistr = {};
+							aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aistr);
+							HZ_TRACE("{0} DIFFUSE texture: {1} ", mtlName.c_str(), aistr.C_Str());
+							std::string texturepath = m_LoadPath + "/" + aistr.C_Str();
+							auto texture = Texture2D::Create(texturepath);
+							mtl->Set(MaterialAsset::GetDiffuseMapLocation(), texture);
+							
+							{
+								//LightMap
+								std::string Lightmappath = texturepath;
+								auto index = Lightmappath.find_last_of(".");
+								Lightmappath.insert(index, "_Light");
+								if (KansFileSystem::Exists(texturepath))
+								{
+									auto lighttexture = Texture2D::Create(texturepath);
+									mtl->Set(MaterialAsset::GetToneLightMapLocation(), lighttexture);
+									HZ_TRACE("{0} Light texture: {1} ", mtlName.c_str(), Lightmappath.c_str());
+								}
+								else
+								{
+									HZ_WARN("{0} don't have Light texture", mtlName.c_str());
+									mtl->Set(MaterialAsset::GetToneLightMapLocation(), Renderer::GetWhiteTexture());
+								}
+							}
+							{
+								//RampMap
+								std::string Rampmappath = texturepath;
+								auto index = Rampmappath.find_last_of(".");
+								Rampmappath.insert(index, "_Ramp");
+
+								if (KansFileSystem::Exists(Rampmappath))
+								{
+									auto ramptexture = Texture2D::Create(Rampmappath);
+									mtl->Set(MaterialAsset::GetToneRampMapLocation(), ramptexture);
+									HZ_TRACE("{0} Ramp texture: {1} ", mtlName.c_str(), Rampmappath.c_str());
+								}
+								else
+								{
+									HZ_WARN("{0} don't have Ramp texture", mtlName.c_str());
+									mtl->Set(MaterialAsset::GetToneRampMapLocation(), Renderer::GetWhiteTexture());
+								}
+							}
+						}
+						else
+						{
+							HZ_WARN("{0} don't have DIFFUSE texture", mtlName.c_str());
+							mtl->Set(MaterialAsset::GetDiffuseMapLocation(), Renderer::GetWhiteTexture());
+						}
 					}
 					else
 					{

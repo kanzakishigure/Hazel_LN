@@ -249,6 +249,12 @@ namespace Hazel {
 		glUniform1iv(location,count,value);
 	}
 
+	void OpenGLShader::UploadUniformBool(const std::string& name, const bool value) const
+	{
+		uint32_t location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1i(location, value);
+	}
+
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
 		HZ_PROFILE_FUCTION();
@@ -285,16 +291,28 @@ namespace Hazel {
 		UploadUniformInt(name, value);
 	}
 
-	void OpenGLShader::SetIntArray(const std::string& name,const int count ,const int* value)
+	void OpenGLShader::SetInt2(const std::string& name, const glm::ivec2& value)
+	{
+		HZ_PROFILE_FUCTION();
+		UploadUniform2Int(name, value);
+	}
+
+	void OpenGLShader::SetIntArray(const std::string& name, const int count, const int* value)
 	{
 		HZ_PROFILE_FUCTION();
 		UploadUniformIntArray(name,count,value);
 	}
 
+	void OpenGLShader::SetBool(const std::string& name, const bool value)
+	{
+		HZ_PROFILE_FUCTION();
+		UploadUniformBool(name, value);
+	}
+
 	const void OpenGLShader::SetShaderBuffer(ShaderBufferLayout layout)
 	{
 		uint32_t size = 0;
-		for (auto element : layout.GetElements())
+		for (auto& element : layout.GetElements())
 		{
 			m_Shaderbuffer.ShaderUniforms[element.Name] = ShaderUniform{element.Name,element.Size,element.Offset,element.Type};
 			size += element.Size;

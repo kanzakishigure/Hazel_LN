@@ -38,6 +38,7 @@
 //------辅助工具---------------
 #include "Hazel/Debug/Instrumentor.h"
 #include "Hazel/Math/Math.h"
+#include "Hazel/Utilities/KansUtils.h"
 //------程序入口点--------------
 
 //#include"Hazel/Core/EntryPoint.h"
